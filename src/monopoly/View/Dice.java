@@ -18,7 +18,7 @@ public class Dice extends Widget{
     public void animation(int number){
         long currentTime = new Date().getTime();
         while ((new Date().getTime() - currentTime)/1000 < playTime){
-            int n = (int)(Math.random()*100)%6 + 1;
+            int n = (int)(Math.random()*100)%Configs.DiceSideNumber + 1;
             setDiceNumber(n);
             try {
                 TimeUnit.MILLISECONDS.sleep(100);

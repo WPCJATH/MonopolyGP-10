@@ -2,6 +2,7 @@ package monopoly.View;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 
 public class Widget {
     private ArrayList<Widget> childComponents;
@@ -12,6 +13,7 @@ public class Widget {
     private final int x;
     private final int y;
     private boolean isChanged;
+    private boolean isChildComponentsLocked;
 
     public Widget(int width, int height, int x, int y) {
         this.width = width;
@@ -25,6 +27,7 @@ public class Widget {
         }
 
         isChanged = true;
+        isChildComponentsLocked = false;
     }
 
     public void initialContent(){
@@ -40,6 +43,11 @@ public class Widget {
     }
 
     public void addChildComponent(Widget component) {
+        if (isChildComponentsLocked) {
+            try {TimeUnit.MILLISECONDS.sleep(10);} catch (InterruptedException ignored){}
+            addChildComponent(component);
+        }
+
         if ((component.getWidth() + component.getX() > width)){
             System.out.printf("Beyond Border: child width %d, child X %d, parent X %d\n",
                     component.getWidth(), component.getX(), width);
@@ -55,6 +63,11 @@ public class Widget {
     }
 
     public void removeChildComponent(int index){
+        if (isChildComponentsLocked) {
+            try {TimeUnit.MILLISECONDS.sleep(10);} catch (InterruptedException ignored){}
+            removeChildComponent(index);
+        }
+
         if (index < 0 || index > childComponents.size() - 1)
             throw new IllegalArgumentException("Index out of range.");
         childComponents.remove(index);
@@ -62,6 +75,11 @@ public class Widget {
     }
 
     public void removeChildComponent(Widget child){
+        if (isChildComponentsLocked) {
+            try {TimeUnit.MILLISECONDS.sleep(10);} catch (InterruptedException ignored){}
+            removeChildComponent(child);
+        }
+
         childComponents.remove(child);
         for (int h = 0; h < child.getHeight(); h++){
             if (child.getWidth() >= 0)
@@ -72,6 +90,11 @@ public class Widget {
     }
 
     public void clear(){
+        if (isChildComponentsLocked) {
+            try {TimeUnit.MILLISECONDS.sleep(10);} catch (InterruptedException ignored){}
+            clear();
+        }
+
         for (int i=0; i<height;i++)
             this.content[i] = Arrays.copyOf(contentBackup[i], width);
         childComponents = new ArrayList<>();
@@ -79,9 +102,9 @@ public class Widget {
     }
 
     public char[][] update(){
+        if (!isChanged()) return content;
+        isChildComponentsLocked = true;
         for (Widget child: childComponents){
-            // if (!child.isChanged()) continue;
-
             char[][] ChildContent = child.update();
             for (int h = 0; h < child.getHeight(); h++){
                 if (child.getWidth() >= 0)
@@ -89,16 +112,21 @@ public class Widget {
                             child.getX(), child.getWidth());
             }
         }
+        isChildComponentsLocked = false;
         isChanged = false;
         return content;
     }
 
     public boolean isChanged() {
         if (isChanged) return true;
+        isChildComponentsLocked = true;
         for (Widget child: childComponents){
-            if (child.isChanged())
+            if (child.isChanged()){
+                isChildComponentsLocked = false;
                 return true;
+            }
         }
+        isChildComponentsLocked = false;
         return false;
     }
 

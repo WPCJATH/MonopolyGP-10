@@ -39,13 +39,13 @@ public class SquareFront extends Widget{
         addChildComponent(playerLabel);
     }
 
-    public SquareFront(int x, int y, SquareBackend squareBackend, int i){
-        super(16, 1, x, y+3);
+    public SquareFront(int x, int y){
+        super(14, 1, x+2, y+3);
         initialContent();
 
         players = new ArrayList<>();
         playerLabelText = "";
-        playerLabel = new Label(14, 2, 0);
+        playerLabel = new Label(14, 0, 0);
         playerLabel.setLayout("right");
         addChildComponent(playerLabel);
     }

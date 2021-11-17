@@ -11,6 +11,8 @@ public class GamePage extends Widget{
     private final PlayerBar[] playerBars;
     private final SquareBackend[] squareBackends;
     private final SquareFront[] squareFronts;
+    private final InJailFront inJailFront;
+    private StateBar stateBar;
 
 
     public GamePage(Player[] players, SquareBackend[] squares) {
@@ -39,24 +41,47 @@ public class GamePage extends Widget{
             if (squareBackends[i].getType()==SquareType.PROPERTY)
                 squareFronts[i] = new SquareFront(squarePositions[i][0], squarePositions[i][1], squareBackends[i]);
             else
-                squareFronts[i] = new SquareFront(squarePositions[i][0], squarePositions[i][1], squareBackends[i], 0);
+                squareFronts[i] = new SquareFront(squarePositions[i][0], squarePositions[i][1]);
             addChildComponent(squareFronts[i]);
         }
+
+        Label[] moneyChangeAnimationLabels = new Label[]{
+                new Label(5, 19, 2),
+                new Label(5, 67, 2),
+                new Label(5, 92, 2),
+                new Label(5, 19, 38),
+                new Label(5, 67, 38),
+                new Label(5, 92, 38),
+        };
 
         playerBars = new PlayerBar[6];
         for (int i=0; i<6; i++){
             if (i < players.length){
-                playerBars[i] = new PlayerBar(playerPositions[i][0], playerPositions[i][1], players[i]);
+                playerBars[i] = new PlayerBar(playerPositions[i][0],
+                        playerPositions[i][1], players[i], moneyChangeAnimationLabels[i]);
             }
             else{
-                playerBars[i] = new PlayerBar(playerPositions[i][0], playerPositions[i][1], i);
+                playerBars[i] = new PlayerBar(playerPositions[i][0], playerPositions[i][1]);
             }
             addChildComponent(playerBars[i]);
         }
+
+        for (int i=0; i<players.length; i++){
+            addChildComponent(moneyChangeAnimationLabels[i]);
+        }
+
+        inJailFront = new InJailFront(12, 31);
+        addChildComponent(inJailFront);
+    }
+
+    public void setTimer(Timer timer){
+        stateBar = new StateBar(timer);
+        addChildComponent(stateBar);
+        new Thread(stateBar).start();
     }
 
     public void setPlayerBarSelected(int index){
-        playerBars[index].setSelected();
+        new Thread(() -> playerBars[index].setSelected()).start();
     }
 
     public void setPlayerBarUnselected(int index){
@@ -127,7 +152,7 @@ public class GamePage extends Widget{
         DoubleDiceBox doubleDiceBox = new DoubleDiceBox(index+1,
                 players[index].getNameString(), diceNumbers[0], diceNumbers[1], isMandatory);
         addChildComponent(doubleDiceBox);
-        new Thread(doubleDiceBox::listenOnSelection).start();
+        doubleDiceBox.listenOnSelection();
         removeChildComponent(doubleDiceBox);
         if (diceNumbers[0]==diceNumbers[1])
             return 1;
@@ -138,25 +163,42 @@ public class GamePage extends Widget{
         squareFronts[squareIndex].setHost(PlayerIndex + 1);
     }
 
-    public void makeMovement(int index, int step){
-        squareFronts[players[index].getPositionID()-1].removePlayer(index+1);
+    public void makeMovement(int index, int steps){
+        if (steps==0) return;
+        int originPositionID = players[index].getPositionID();
+        if (originPositionID + steps > 21)
+            throw new IllegalArgumentException("Cannot pass go through single call.");
 
-        for (int i=1; i<step;i++){
-            if (players[index].getPositionID() + i <= 20)
-                squareFronts[players[index].getPositionID()-1+i].passBy(index+1);
-            else
-                squareFronts[players[index].getPositionID()-1+i-20].passBy(index+1);
+        squareFronts[originPositionID-1].removePlayer(index+1);
+        if (originPositionID + steps == 21){
+            for (int i=0; i<steps; i++)
+                squareFronts[originPositionID+i-1].passBy(index+1);
+            squareFronts[originPositionID+steps-1-20].passBy(index+1);
+            squareFronts[originPositionID+steps-1-20].addPlayer(index+1);
         }
-
-        if (players[index].getPositionID() + step <= 20)
-            squareFronts[players[index].getPositionID()-1+step].addPlayer(index+1);
-        else
-            squareFronts[players[index].getPositionID()-1+step-20].addPlayer(index+1);
+        else {
+            for (int i=0; i<=steps; i++)
+                squareFronts[originPositionID+i-1].passBy(index+1);
+            squareFronts[originPositionID+steps-1].addPlayer(index+1);
+        }
     }
 
     public void goToJailMove(int index){
         squareFronts[players[index].getPositionID()-1].removePlayer(index+1);
+        inJailFront.addPlayer(index+1);
+    }
+
+    public void setOutOfJail(int index){
+        inJailFront.removePlayer(index+1);
         squareFronts[5].addPlayer(index+1);
+    }
+
+    public void setRound(int round){
+        stateBar.setRound(round);
+    }
+
+    public void terminateStateBar(){
+        stateBar.setStop();
     }
 
 

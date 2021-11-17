@@ -15,7 +15,7 @@ public class PropertyAskBox extends Widget{
         Label headLabel = new Label(63, 1, 1,
                 " ↑ Time Limit          Buy a Property                          ");
 
-        Label callNameLabel = new Label(25, 1, 2, "  To Player " + id + ' ' + name);
+        Label callNameLabel = new Label(25, 1, 2, "  To Player " + id + ' ' + name+':');
         callNameLabel.setLayout("left");
         Label messageLabel = new Label(63, 1, 3, "Do you want to buy the property shown below?");
 
@@ -27,6 +27,7 @@ public class PropertyAskBox extends Widget{
         Label rentLabel = new Label(17, 31, 9,  "Rent:         HKD");
 
         Label propertyName = new Label(12, 36, 7, property.getName());
+        propertyName.setLayout("right");
         Label prize = new Label(4, 40, 8, String.valueOf(property.getPrice()));
         prize.setLayout("right");
         Label rent = new Label(4, 40, 9, String.valueOf(property.getRent()));

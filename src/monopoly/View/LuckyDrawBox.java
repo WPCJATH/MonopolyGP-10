@@ -14,7 +14,7 @@ public class LuckyDrawBox extends Widget{
         Label headLabel = new Label(63, 1, 1,
                 " ↑ Time Limit         CHANCE Lucky Draw                        ");
 
-        Label callNameLabel = new Label(25, 1, 2, "To Player " + id + ' ' + name);
+        Label callNameLabel = new Label(25, 1, 2, "To Player " + id + ' ' + name+':');
         Label messageLabel = new Label(63, 1, 3,
                 "                  Pick one card and flip it.                   ");
 
@@ -25,6 +25,7 @@ public class LuckyDrawBox extends Widget{
                 new Card(48, 7, cardNumbers[3])
         };
 
+        Label label1 = new Label(63, 1, 14, "Push Enter after selection.");
 
         addChildComponent(headLabel);
         addChildComponent(messageLabel);
@@ -32,6 +33,7 @@ public class LuckyDrawBox extends Widget{
             addChildComponent(card);
         cards[0].setSelected();
 
+        addChildComponent(label1);
     }
 
     public int listenOnSelection(){

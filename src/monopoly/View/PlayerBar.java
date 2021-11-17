@@ -10,9 +10,11 @@ public class PlayerBar extends Widget{
     private Label moneyLabel;
     private Label stateLabel;
     private Player player;
-    private int moneyAmount;
+    private int lastTimeMoneyAmount;
+    private boolean isContinue;
+    private Label moneyChangeLabel;
 
-    public PlayerBar(int x, int y, Player player) {
+    public PlayerBar(int x, int y, Player player, Label moneyChangeLabel) {// Jail Rd1
         super(17, 3, x, y);
         initialContent();
 
@@ -23,47 +25,63 @@ public class PlayerBar extends Widget{
         Label nameLabel = new Label(12, 4, 0, player.getNameString());
         Label label1 = new Label(15, 1, 1, "Money:      HKD");
         moneyLabel = new Label(6,7,1,String.valueOf(player.getMoney()));
-        stateLabel = new Label(15, 1, 2, "active");
+        Label label2 = new Label(6, 1, 2, "State:");
+        stateLabel = new Label(8, 8, 2, "active");
 
         addChildComponent(idLabel);
         addChildComponent(nameLabel);
         addChildComponent(label1);
         addChildComponent(moneyLabel);
+        addChildComponent(label2);
         addChildComponent(stateLabel);
 
-        moneyAmount = player.getMoney();
+        lastTimeMoneyAmount = player.getMoney();
+        isContinue = false;
+
+        this.moneyChangeLabel = moneyChangeLabel;
+    }
+
+    public PlayerBar(int x, int y){
+        super(17, 3, x, y);
+        initialContent();
     }
 
     public void setSelected(){
-        idLabel.setText("→" + id + "←");
+        isContinue = true;
+        while (true){
+            idLabel.setText("→" + id + "←");
+            try {TimeUnit.MILLISECONDS.sleep(500);} catch (InterruptedException ignored) {}
+            if (!isContinue) break;
+            idLabel.setText(String.valueOf(id));
+        }
     }
 
     public void setUnselected(){
+        isContinue = false;
         idLabel.setText(String.valueOf(id));
     }
 
-    public PlayerBar(int x, int y, int id){
-        super(17, 3, x, y);
-        initialContent();
-        Label idLabel = new Label(1, 2, 0, String.valueOf(id));
-    }
-
     public void updateMoney() {
+        int diff = player.getMoney() - lastTimeMoneyAmount;
+        if (diff==0) return;
+
         moneyLabel.setText(String.valueOf(player.getMoney()));
-        stateLabel.setLayout("right");
-        int diff = player.getMoney() - moneyAmount;
         if (diff >= 0)
-            stateLabel.setText("+" + diff);
+            moneyChangeLabel.setText("+" + diff);
         else
-            stateLabel.setText("" + diff);
-        try {TimeUnit.MILLISECONDS.sleep(1000);} catch (InterruptedException ignored) {}
-        stateLabel.setLayout("center");
-        moneyAmount = player.getMoney();
+            moneyChangeLabel.setText("" + diff);
+        try {TimeUnit.MILLISECONDS.sleep(2000);} catch (InterruptedException ignored) {}
+        moneyChangeLabel.setText("");
+        lastTimeMoneyAmount = player.getMoney();
     }
 
     public void updateState(){
         if (player.IsInPrison()){
-            stateLabel.setText("In Jail");
+            switch (player.inPrisonState){
+                case INJAILROUND1 -> stateLabel.setText("Jail Rd1");
+                case INJAILROUND2 -> stateLabel.setText("Jail Rd2");
+                case INJAILROUND3 -> stateLabel.setText("Jail Rd3");
+            }
             return;
         }
         if (player.isBankrupt()){
@@ -72,6 +90,4 @@ public class PlayerBar extends Widget{
         }
         stateLabel.setText("Active");
     }
-
-
 }

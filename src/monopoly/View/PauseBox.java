@@ -55,7 +55,7 @@ public class PauseBox extends Widget implements Runnable{
         }
     }
 
-    private void goPrevious(){
+    private void goNext(){
         buttons[currenSelectIndex].setUnselected();
         if (currenSelectIndex < buttons.length-1)
             currenSelectIndex++;
@@ -64,7 +64,7 @@ public class PauseBox extends Widget implements Runnable{
         buttons[currenSelectIndex].setSelected();
     }
 
-    private void goNext(){
+    private void goPrevious(){
         buttons[currenSelectIndex].setUnselected();
         if (currenSelectIndex > 0)
             currenSelectIndex--;
@@ -79,10 +79,11 @@ public class PauseBox extends Widget implements Runnable{
 
     @Override
     public void run() {
-        while (isContinue){
-            headLabel.setText("");
-            try {TimeUnit.MILLISECONDS.sleep(500);} catch (InterruptedException ignored) {}
+        while (true){
             headLabel.setText("pause");
+            if (!isContinue) break;
+            try {TimeUnit.MILLISECONDS.sleep(500);} catch (InterruptedException ignored) {}
+            headLabel.setText("");
         }
     }
 }

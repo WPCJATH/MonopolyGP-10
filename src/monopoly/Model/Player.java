@@ -1,5 +1,6 @@
 package monopoly.Model;
 
+import javax.xml.stream.FactoryConfigurationError;
 import java.util.Random;
 
 public class Player {
@@ -7,7 +8,7 @@ public class Player {
     private final int playerID;
     private final String nameString;
     private boolean isBankrupt;
-    private InPrisonState inPrisonState;
+    public InPrisonState inPrisonState;
     private int positionID;
     private int propertyNumber;
 
@@ -58,22 +59,23 @@ public class Player {
     }
 
     public boolean onGoingProperty(SquareBackend property){
-        if (!property.hasHost())
-            return false;
-        if (property.getHostID()==playerID)
+        if (property.hasHost()){
+            if (property.getHostID()==playerID)
+                return true;
+            setMoney(getMoney() - property.getRent());
             return true;
-        setMoney(getMoney() - property.getRent());
-        propertyNumber++;
-        return true;
+        }
+        return getMoney() < property.getPrice();
     }
 
     public boolean onBuyingProperty(SquareBackend property){
         if (property.hasHost())
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Already have a host.");
         if (getMoney() < property.getPrice())
-            return false;
+            throw new IllegalCallerException("Cannot afford.");
         setMoney(getMoney() - property.getPrice());
         property.setHostID(playerID);
+        propertyNumber++;
         return true;
     }
 
@@ -85,7 +87,7 @@ public class Player {
     public boolean onStayingPrison(){
         if (InPrisonState.isOutNextRound(inPrisonState)){
             setMoney(getMoney() - Configs.BailFee);
-            updateInPrison();
+            setOutPrison();
             return true;
         }
         return false;
@@ -135,7 +137,7 @@ public class Player {
 
     public void setMoney(int newMoneyAmount) {
         if (isBankrupt())
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Already Broken.");
         moneyAmount = newMoneyAmount;
         if (moneyAmount < 0)
             setBankrupt();
