@@ -79,11 +79,11 @@ public class PauseBox extends Widget implements Runnable{
 
     @Override
     public void run() {
-        while (true){
-            headLabel.setText("pause");
-            if (!isContinue) break;
-            try {TimeUnit.MILLISECONDS.sleep(1000);} catch (InterruptedException ignored) {}
+        while (isContinue) {
             headLabel.setText("");
+            try {TimeUnit.MILLISECONDS.sleep(500);} catch (InterruptedException ignored) {}
+            headLabel.setText("pause");
+            try {TimeUnit.MILLISECONDS.sleep(500);} catch (InterruptedException ignored) {}
         }
     }
 }

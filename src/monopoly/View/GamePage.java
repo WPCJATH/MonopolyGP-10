@@ -105,55 +105,65 @@ public class GamePage extends Widget{
         }
     }
 
-    public void displaySingleDiceBox(int index, int number){
-        SingleDiceBox singleDiceBox= new SingleDiceBox(index+1, players[index].getNameString(), number);
-        addChildComponent(singleDiceBox);
-        if (players[index].isRobot()){
-            try {TimeUnit.SECONDS.sleep(2);} catch (InterruptedException ignored) {}
-        }
-        else{
-            waitForUserInput();
-            singleDiceBox.listenOnSelection();
-            timer.stopCountDown();
-        }
-        singleDiceBox.rollDice();
-        removeChildComponent(singleDiceBox);
-    }
-
-    private void waitForUserInput() {
-        timer.timerStart(Configs.waitForSelectionTime);
+    private void startWaitListenThread(){
         new Thread(() -> {
             while (true){
                 if (timer.isCountDownTerminated()){
                     GlobalController.keyboardListener.clearCurrentListenMethods();
                     break;
                 }
-                try {
-                    TimeUnit.MILLISECONDS.sleep(200);} catch (InterruptedException ignored) {}
-            }
+                try {TimeUnit.MILLISECONDS.sleep(200);} catch (InterruptedException ignored) {}}
         }).start();
     }
 
-    public int displayPauseBox(){
-        PauseBox pauseBox = new PauseBox();
-        addChildComponent(pauseBox);
-        Thread thread = new Thread(pauseBox);
-        thread.start();
+    private void listenOnNoReturnSelection(Widget box, int index){
+        timer.timerStart(Configs.waitForSelectionTime);
+        if (!players[index].isRobot()){
+            startWaitListenThread();
+            box.listenOnSelection();
+        }
+        else
+            try {TimeUnit.SECONDS.sleep(3);} catch (InterruptedException ignored) {}
+        timer.stopCountDown();
+    }
 
-        int returnNum = pauseBox.listenOnSelection();
+    public int displaySingleDiceBox(int index, int number){
+        SingleDiceBox singleDiceBox= new SingleDiceBox(index+1, players[index].getNameString(), number);
+        addChildComponent(singleDiceBox);
+        listenOnNoReturnSelection(singleDiceBox, index);
+        singleDiceBox.rollDice();
+        removeChildComponent(singleDiceBox);
+        return 1;
+    }
 
-        pauseBox.setStop();
-        try {thread.join();} catch (InterruptedException ignored) {}
-        removeChildComponent(pauseBox);
-        return returnNum;
+    public int displayDoubleDiceBox(int index, int[] diceNumbers, boolean isMandatory){
+        DoubleDiceBox doubleDiceBox = new DoubleDiceBox(index+1,
+                players[index].getNameString(), diceNumbers[0], diceNumbers[1], isMandatory);
+        addChildComponent(doubleDiceBox);
+        listenOnNoReturnSelection(doubleDiceBox, index);
+        doubleDiceBox.rollDice();
+        if (diceNumbers[0]==diceNumbers[1]) return 1;
+        return 0;
+    }
+
+    private int listenOnReturnSelection(Widget box, int index){
+        int reNum = -1;
+        timer.timerStart(Configs.waitForSelectionTime);
+        if (!players[index].isRobot()){
+            startWaitListenThread();
+            reNum = box.listenOnSelection();
+        }
+        timer.stopCountDown();
+        return reNum;
     }
 
     public int displayPropertyAskBox(int playerIndex, int squareIndex){
         PropertyAskBox propertyAskBox = new PropertyAskBox(
                 squareBackends[squareIndex], playerIndex + 1, players[playerIndex].getNameString());
-        int reNum;
         addChildComponent(propertyAskBox);
-        if (players[playerIndex].isRobot()){
+
+        int reNum = listenOnReturnSelection(propertyAskBox, playerIndex);
+        if (reNum==-1){
             try {TimeUnit.SECONDS.sleep(3);} catch (InterruptedException ignored) {}
             if (players[playerIndex].ifBuy(squareBackends[squareIndex])){
                 reNum = 1;
@@ -163,23 +173,6 @@ public class GamePage extends Widget{
                 reNum = 0;
                 propertyAskBox.OnSelection(1);
             }
-
-        }
-        else{
-            waitForUserInput();
-            reNum = propertyAskBox.listenOnSelection();
-            if (reNum==-1){
-                if (players[playerIndex].ifBuy(squareBackends[squareIndex])){
-                    reNum = 1;
-                    propertyAskBox.OnSelection(0);
-                }
-                else{
-                    reNum = 0;
-                    propertyAskBox.OnSelection(1);
-                }
-            }
-            else
-                timer.stopCountDown();
         }
 
         removeChildComponent(propertyAskBox);
@@ -189,23 +182,15 @@ public class GamePage extends Widget{
     public int displayLuckyDrawBox(int index, int[] cardNumbers){
         LuckyDrawBox luckyDrawBox = new LuckyDrawBox(index+1, players[index].getNameString(), cardNumbers);
         addChildComponent(luckyDrawBox);
-        int reNum;
-        if (players[index].isRobot()){
+
+        int reNum = listenOnReturnSelection(luckyDrawBox, index);
+        if (reNum==-1){
             try {TimeUnit.SECONDS.sleep(3);} catch (InterruptedException ignored) {}
             reNum = players[index].chooseCard(0, cardNumbers.length);
             luckyDrawBox.OnSelection(reNum);
         }
-        else {
-            waitForUserInput();
-            reNum = luckyDrawBox.listenOnSelection();
-            if (reNum == -1){
-                reNum = players[index].chooseCard(0, cardNumbers.length);
-                luckyDrawBox.OnSelection(reNum);
-            }
-            else
-                timer.stopCountDown();
-        }
         luckyDrawBox.display();
+
         removeChildComponent(luckyDrawBox);
         return cardNumbers[reNum];
     }
@@ -213,8 +198,9 @@ public class GamePage extends Widget{
     public int displayInJailAskBox(int index){
         InJailAskBox inJailAskBox = new InJailAskBox(index+1, players[index].getNameString());
         addChildComponent(inJailAskBox);
-        int reNum;
-        if (players[index].isRobot()){
+
+        int reNum = listenOnReturnSelection(inJailAskBox, index);
+        if (reNum!=-1){
             try {TimeUnit.SECONDS.sleep(3);} catch (InterruptedException ignored) {}
             if (players[index].isReleaseOnBail())
                 reNum = 1;
@@ -222,42 +208,26 @@ public class GamePage extends Widget{
                 reNum = 0;
             inJailAskBox.OnSelection(reNum);
         }
-        else{
-            waitForUserInput();
-            reNum = inJailAskBox.listenOnSelection();
-            if (reNum==-1){
-                if (players[index].isReleaseOnBail())
-                    reNum = 1;
-                else
-                    reNum = 0;
-                inJailAskBox.OnSelection(reNum);
-            }
-            else
-                timer.stopCountDown();
-        }
+
         removeChildComponent(inJailAskBox);
         return reNum;
     }
 
-    public int displayDoubleDiceBox(int index, int[] diceNumbers, boolean isMandatory){
-        DoubleDiceBox doubleDiceBox = new DoubleDiceBox(index+1,
-                players[index].getNameString(), diceNumbers[0], diceNumbers[1], isMandatory);
-        addChildComponent(doubleDiceBox);
 
-        if (players[index].isRobot()){
-            try {TimeUnit.SECONDS.sleep(3);} catch (InterruptedException ignored) {}
-        }
-        else{
-            waitForUserInput();
-            doubleDiceBox.listenOnSelection();
-            timer.stopCountDown();
-        }
-        removeChildComponent(doubleDiceBox);
-        doubleDiceBox.rollDice();
-        if (diceNumbers[0]==diceNumbers[1])
-            return 1;
-        return 0;
+    public int displayPauseBox(){
+        PauseBox pauseBox = new PauseBox();
+        addChildComponent(pauseBox);
+
+        Thread thread = new Thread(pauseBox);
+        thread.start();
+        int returnNum = pauseBox.listenOnSelection();
+        pauseBox.setStop();
+        try {thread.join();} catch (InterruptedException ignored) {}
+
+        removeChildComponent(pauseBox);
+        return returnNum;
     }
+
 
     public void setHost(int squareIndex, int PlayerIndex){
         squareFronts[squareIndex].setHost(PlayerIndex + 1);

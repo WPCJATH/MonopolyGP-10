@@ -3,7 +3,6 @@ package monopoly.View;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ConcurrentModificationException;
-import java.util.concurrent.TimeUnit;
 
 public class Widget {
     private ArrayList<Widget> childComponents;

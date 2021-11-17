@@ -13,6 +13,7 @@ public class PlayerBar extends Widget{
     private int lastTimeMoneyAmount;
     private boolean isContinue;
     private Label moneyChangeLabel;
+    private boolean isOccupied;
 
     public PlayerBar(int x, int y, Player player, Label moneyChangeLabel) {// Jail Rd1
         super(17, 3, x, y);
@@ -39,6 +40,7 @@ public class PlayerBar extends Widget{
         isContinue = false;
 
         this.moneyChangeLabel = moneyChangeLabel;
+        isOccupied = false;
     }
 
     public PlayerBar(int x, int y){
@@ -48,11 +50,11 @@ public class PlayerBar extends Widget{
 
     public void setSelected(){
         isContinue = true;
-        while (true){
+        while (isContinue) {
+            idLabel.setText("→" + id + "←");
+            try {TimeUnit.MILLISECONDS.sleep(500);} catch (InterruptedException ignored) {}
             idLabel.setText(String.valueOf(id));
             try {TimeUnit.MILLISECONDS.sleep(500);} catch (InterruptedException ignored) {}
-            if (!isContinue) break;
-            idLabel.setText("→" + id + "←");
         }
     }
 
@@ -61,18 +63,26 @@ public class PlayerBar extends Widget{
         idLabel.setText(String.valueOf(id));
     }
 
+
     public void updateMoney() {
+        while (isOccupied)
+            try {TimeUnit.MILLISECONDS.sleep(200);} catch (InterruptedException ignored) {}
+
         int diff = player.getMoney() - lastTimeMoneyAmount;
         if (diff==0) return;
+        isOccupied = true;
 
         moneyLabel.setText(String.valueOf(player.getMoney()));
         if (diff >= 0)
             moneyChangeLabel.setText("+" + diff);
         else
             moneyChangeLabel.setText("" + diff);
+
         try {TimeUnit.MILLISECONDS.sleep(2000);} catch (InterruptedException ignored) {}
         moneyChangeLabel.setText("");
         lastTimeMoneyAmount = player.getMoney();
+
+        isOccupied = false;
     }
 
     public void updateState(){
@@ -86,7 +96,7 @@ public class PlayerBar extends Widget{
         }
         if (player.isBankrupt()){
             stateLabel.setText("Broke");
-            idLabel.setText("✕" + id + " ");
+            idLabel.setText("✕");
             return;
         }
         stateLabel.setText("Active");
