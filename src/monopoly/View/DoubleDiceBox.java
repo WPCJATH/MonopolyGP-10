@@ -11,7 +11,7 @@ public class DoubleDiceBox extends Widget{
     private final int diceNumber2;
 
     public DoubleDiceBox(int id, String name, int diceNumber1, int diceNumber2, boolean isMandatory){
-        super(-1,-1,26,7);
+        super(-1,-1,26,12);
         setContent(GlobalController.preLoadModels.messageBox);
 
         this.diceNumber1 = diceNumber1;
@@ -20,11 +20,12 @@ public class DoubleDiceBox extends Widget{
         Label headLabel = new Label(63, 1, 1,
                 " ↑ Time Limit            Roll two Dice                         ");
 
-        Label callNameLabel = new Label(25, 1, 2, "To Player " + id + ' ' + name + ':');
+        Label callNameLabel = new Label(25, 1, 2, "   To Player " + id + ' ' + name + ':');
+        callNameLabel.setLayout("left");
         Label messageLabel = new Label(63, 1, 3, "Press (push Enter) the Roll button to row your dice.");
         dice1 = new Dice(16, 6);
         dice2 = new Dice(39, 6);
-        Button rollButton = new Button(31, 23, 13, "Roll");
+        Button rollButton = new Button(21, 22, 13, "Roll");
         rollButton.setSelected();
 
         addChildComponent(headLabel);
@@ -43,20 +44,16 @@ public class DoubleDiceBox extends Widget{
 
     public int listenOnSelection(){
         while(true){
-            switch (GlobalController.keyboardListener.listenCharInput()){
-                case 'p':
-                case 'P':
-                    return -1;
-                case 10:
-                    rollDice();
+            switch (GlobalController.keyboardListener.listenCharInput()) {
+                case 10, 8 -> {
                     return 1;
-                default:
-                    break;
+                }
+                default -> {}
             }
         }
     }
 
-    private void rollDice(){
+    public void rollDice(){
         dice1.animation(diceNumber1);
         dice2.animation(diceNumber2);
         try {TimeUnit.SECONDS.sleep(2);} catch (InterruptedException ignored) {}

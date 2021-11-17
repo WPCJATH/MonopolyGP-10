@@ -6,18 +6,21 @@ public class Configs {
     public static final int minimumHumanPlayerNumber = 1;
     public static final int nameLengthBound = 10;
     public static final int maxRoundNumber = 100;
+    public static final int waitForSelectionTime = 30;
 
     public static int DiceSideNumber = 4;
     public static int minimumChanceMoney = -200;
     public static int maximumChanceMoney = 500;
     public static int BailFee = 150;
-    public static int initialFunding = 1500;
+    public static int initialFunding = 500;
     public static int taxRate = 10;
     public static SquareBackend[] squareBackends;
 
-    public static double fps = 10;
-    public static String displayMode = "refresh"; // "append"
-    public static int diceAnimationDisplayTime = 2; //seconds
+    public static final double fps = 10;
+    public static final String displayMode = "refresh"; // "append"
+    public static final int diceAnimationDisplayTime = 2; //seconds
+
+    public static final int[] robotMinimumToleranceMoney = {0, 100, 300};
 
     public Configs(){
         squareBackends = new SquareBackend[20];

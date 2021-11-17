@@ -2,6 +2,8 @@ package monopoly.View;
 
 import monopoly.Controller.GlobalController;
 
+import java.util.concurrent.TimeUnit;
+
 public class LuckyDrawBox extends Widget{
     private final Card[] cards;
     private int currentSelectIndex;
@@ -28,6 +30,7 @@ public class LuckyDrawBox extends Widget{
         Label label1 = new Label(63, 1, 14, "Push Enter after selection.");
 
         addChildComponent(headLabel);
+        addChildComponent(callNameLabel);
         addChildComponent(messageLabel);
         for (Card card:cards)
             addChildComponent(card);
@@ -50,10 +53,16 @@ public class LuckyDrawBox extends Widget{
                 case 10:
                     display();
                     return currentSelectIndex;
-                case 'p':
-                case 'P':
+                case 8:
                     return -1;
             }
+        }
+    }
+
+    public void OnSelection(int selection){
+        while (currentSelectIndex != selection){
+            goNext();
+            try {TimeUnit.MILLISECONDS.sleep(500);} catch (InterruptedException ignored) {}
         }
     }
 

@@ -75,7 +75,8 @@ public class StateBar extends Widget implements Runnable{
                 isRoundChanged = false;
             }
 
-            try {TimeUnit.MILLISECONDS.sleep(1000 - startTime);} catch (InterruptedException ignored) {}
+            try {TimeUnit.MILLISECONDS.sleep(800 - new Date().getTime() + startTime);}
+            catch (InterruptedException ignored) {}
         }
     }
 }

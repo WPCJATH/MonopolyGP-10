@@ -28,6 +28,11 @@ public class Timer extends Thread{
         return isTimerOn;
     }
 
+    public void stopCountDown(){
+        isTimerOn = false;
+        timeLeft = 0;
+    }
+
     public void setStop(){
         isContinue = false;
     }
@@ -35,11 +40,13 @@ public class Timer extends Thread{
     public void run(){
         while (isContinue){
             long startTime = new Date().getTime();
+
             if (timeLeft>0 && isTimerOn)
                 timeLeft-=1;
+
             if (timeLeft<=0)
-                isTimerOn = false;
-            try {TimeUnit.MILLISECONDS.sleep(1000 - startTime);} catch (InterruptedException ignored) {}
+                stopCountDown();
+            try {TimeUnit.MILLISECONDS.sleep(1000 - new Date().getTime() + startTime);} catch (InterruptedException ignored) {}
         }
     }
 

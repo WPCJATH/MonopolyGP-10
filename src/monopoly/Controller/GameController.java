@@ -80,6 +80,7 @@ public class GameController {
                 }
 
                 gamePage.setPlayerBarSelected(i);
+
                 if (players[i].IsInPrison()){
                     onInJailHandler(i);
                 }
@@ -102,6 +103,15 @@ public class GameController {
                     }
                 }
                 if (!isContinue) break;
+                if (players[i].isBankrupt()){
+                    gamePage.removePlayer(i);
+                    for (int posIndex=0; posIndex< squareBackends.length;posIndex++){
+                        if (squareBackends[posIndex].hasHost() && squareBackends[posIndex].getHostID()==i+1){
+                            gamePage.clearHost(posIndex);
+                            squareBackends[posIndex].setHostID(-1);
+                        }
+                    }
+                }
                 gamePage.setPlayerBarUnselected(i);
                 whosTurn++;
 
@@ -115,7 +125,7 @@ public class GameController {
         if (round>=Configs.maxRoundNumber){
             isContinue = false;
             returnNum = 2;
-            GlobalController.keyboardListener.clearCurrentListenMethods();
+            GlobalController.keyboardListener.clearAllCurrentListenMethods();
         }
     }
 
@@ -127,7 +137,7 @@ public class GameController {
             returnNum = gamePage.displayPauseBox();
             if (returnNum==1 || returnNum==2){
                 isContinue = false;
-                GlobalController.keyboardListener.clearCurrentListenMethods();
+                GlobalController.keyboardListener.clearAllCurrentListenMethods();
                 break;
             }
             GlobalController.keyboardListener.setUnPause();

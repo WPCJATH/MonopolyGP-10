@@ -39,6 +39,12 @@ public class SquareFront extends Widget{
         addChildComponent(playerLabel);
     }
 
+    public void clearHost(){
+        if (!squareBackend.hasHost())
+            throw new IllegalCallerException("The property has no host.");
+        hostId.setText("-");
+    }
+
     public SquareFront(int x, int y){
         super(14, 1, x+2, y+3);
         initialContent();

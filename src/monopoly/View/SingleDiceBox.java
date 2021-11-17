@@ -33,15 +33,16 @@ public class SingleDiceBox extends Widget{
 
     public int listenOnSelection(){
         while(true){
-            if (GlobalController.keyboardListener.listenCharInput() == 10) {
-                break;
+            switch (GlobalController.keyboardListener.listenCharInput()){
+                case 10, 8 -> {
+                    return 1;
+                }
+                default -> {}
             }
         }
-        rollDice();
-        return 1;
     }
 
-    private void rollDice(){
+    public void rollDice(){
         dice.animation(diceNumber);
         try {TimeUnit.SECONDS.sleep(2);} catch (InterruptedException ignored) {}
     }

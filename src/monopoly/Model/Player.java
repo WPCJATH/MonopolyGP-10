@@ -1,6 +1,5 @@
 package monopoly.Model;
 
-import javax.xml.stream.FactoryConfigurationError;
 import java.util.Random;
 
 public class Player {
@@ -98,16 +97,24 @@ public class Player {
     public boolean onGoingJustVisiting(){return true;}
 
 
-    public boolean ifBuy() {
-        return true;
+    public boolean ifBuy(SquareBackend squareBackend) {
+        int diff = getMoney() - squareBackend.getPrice();
+        if (isRobot){
+            return diff >= Configs.robotMinimumToleranceMoney[robotLevel];
+        }
+        return diff >= Configs.robotMinimumToleranceMoney[1];
     }
 
     public boolean isReleaseOnBail(){
-        return true;
+        int diff = getMoney() - Configs.BailFee;
+        if (isRobot){
+            return diff >= Configs.robotMinimumToleranceMoney[robotLevel];
+        }
+        return diff >= Configs.robotMinimumToleranceMoney[1];
     }
 
-    public int chooseCard(int upperBound, int lowerBound) {
-        return randomNo.nextInt(upperBound - lowerBound + 1) + lowerBound;
+    public int chooseCard(int lowerBound, int upperBound) {
+        return randomNo.nextInt(upperBound - lowerBound) + lowerBound;
     }
 
 
@@ -117,6 +124,7 @@ public class Player {
 
     public void setBankrupt(){
         isBankrupt = true;
+        propertyNumber = 0;
     }
 
     public void updateInPrison() {
@@ -136,8 +144,10 @@ public class Player {
     }
 
     public void setMoney(int newMoneyAmount) {
+        if (isBankrupt() && newMoneyAmount < getMoney())
+            throw new IllegalCallerException("Already Broken.");
         if (isBankrupt())
-            throw new IllegalArgumentException("Already Broken.");
+            return;
         moneyAmount = newMoneyAmount;
         if (moneyAmount < 0)
             setBankrupt();

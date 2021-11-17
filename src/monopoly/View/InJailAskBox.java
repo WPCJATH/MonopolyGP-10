@@ -3,6 +3,8 @@ package monopoly.View;
 import monopoly.Controller.GlobalController;
 import monopoly.Model.Configs;
 
+import java.util.concurrent.TimeUnit;
+
 public class InJailAskBox extends Widget{
     private final Button rollDiceButton;
     private final Button postBailButton;
@@ -40,6 +42,7 @@ public class InJailAskBox extends Widget{
         currentSelectionIndex = 0;
     }
 
+
     public int listenOnSelection(){
         while(true){
             switch (GlobalController.keyboardListener.listenCharInput()){
@@ -51,7 +54,16 @@ public class InJailAskBox extends Widget{
                     break;
                 case 10:
                     return currentSelectionIndex;
+                case 8:
+                    return -1;
             }
+        }
+    }
+
+    public void OnSelection(int selection){
+        if (selection==1){
+            go();
+            try {TimeUnit.MILLISECONDS.sleep(1000);} catch (InterruptedException ignored) {}
         }
     }
 

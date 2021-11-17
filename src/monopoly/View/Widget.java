@@ -2,6 +2,7 @@ package monopoly.View;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.ConcurrentModificationException;
 import java.util.concurrent.TimeUnit;
 
 public class Widget {
@@ -43,10 +44,6 @@ public class Widget {
     }
 
     public void addChildComponent(Widget component) {
-        if (isChildComponentsLocked) {
-            try {TimeUnit.MILLISECONDS.sleep(10);} catch (InterruptedException ignored){}
-            addChildComponent(component);
-        }
 
         if ((component.getWidth() + component.getX() > width)){
             System.out.printf("Beyond Border: child width %d, child X %d, parent X %d\n",
@@ -58,29 +55,22 @@ public class Widget {
                     component.getHeight(), component.getY(), height);
             throw new IllegalArgumentException();
         }
+
         childComponents.add(component);
         isChanged = true;
     }
 
     public void removeChildComponent(int index){
-        if (isChildComponentsLocked) {
-            try {TimeUnit.MILLISECONDS.sleep(10);} catch (InterruptedException ignored){}
-            removeChildComponent(index);
-        }
-
         if (index < 0 || index > childComponents.size() - 1)
             throw new IllegalArgumentException("Index out of range.");
+
         childComponents.remove(index);
         isChanged = true;
     }
 
     public void removeChildComponent(Widget child){
-        if (isChildComponentsLocked) {
-            try {TimeUnit.MILLISECONDS.sleep(10);} catch (InterruptedException ignored){}
-            removeChildComponent(child);
-        }
-
         childComponents.remove(child);
+
         for (int h = 0; h < child.getHeight(); h++){
             if (child.getWidth() >= 0)
                 System.arraycopy(contentBackup[child.getY() + h], child.getX(), content[child.getY() + h],
@@ -90,18 +80,14 @@ public class Widget {
     }
 
     public void clear(){
-        if (isChildComponentsLocked) {
-            try {TimeUnit.MILLISECONDS.sleep(10);} catch (InterruptedException ignored){}
-            clear();
-        }
-
         for (int i=0; i<height;i++)
             this.content[i] = Arrays.copyOf(contentBackup[i], width);
+
         childComponents = new ArrayList<>();
         isChanged = true;
     }
 
-    public char[][] update(){
+    public char[][] update() throws ConcurrentModificationException {
         if (!isChanged()) return content;
         isChildComponentsLocked = true;
         for (Widget child: childComponents){
@@ -117,7 +103,7 @@ public class Widget {
         return content;
     }
 
-    public boolean isChanged() {
+    public boolean isChanged() throws ConcurrentModificationException{
         if (isChanged) return true;
         isChildComponentsLocked = true;
         for (Widget child: childComponents){

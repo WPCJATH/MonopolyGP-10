@@ -3,6 +3,9 @@ package monopoly.View;
 import monopoly.Controller.GlobalController;
 import monopoly.Model.SquareBackend;
 
+import java.awt.*;
+import java.util.concurrent.TimeUnit;
+
 public class PropertyAskBox extends Widget{
     private final Button yesButton;
     private final Button noButton;
@@ -71,6 +74,13 @@ public class PropertyAskBox extends Widget{
                 case 'p':
                     return -1;
             }
+        }
+    }
+
+    public void OnSelection(int selection){
+        if (selection!=currentSelectionIndex){
+            go();
+            try {TimeUnit.MILLISECONDS.sleep(1000);} catch (InterruptedException ignored) {}
         }
     }
 

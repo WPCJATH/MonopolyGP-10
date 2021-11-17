@@ -49,10 +49,10 @@ public class PlayerBar extends Widget{
     public void setSelected(){
         isContinue = true;
         while (true){
-            idLabel.setText("→" + id + "←");
+            idLabel.setText(String.valueOf(id));
             try {TimeUnit.MILLISECONDS.sleep(500);} catch (InterruptedException ignored) {}
             if (!isContinue) break;
-            idLabel.setText(String.valueOf(id));
+            idLabel.setText("→" + id + "←");
         }
     }
 
@@ -86,6 +86,7 @@ public class PlayerBar extends Widget{
         }
         if (player.isBankrupt()){
             stateLabel.setText("Broke");
+            idLabel.setText("✕" + id + " ");
             return;
         }
         stateLabel.setText("Active");

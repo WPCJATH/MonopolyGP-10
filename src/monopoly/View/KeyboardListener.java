@@ -77,7 +77,14 @@ public class KeyboardListener extends Thread{
         }
     }
 
+
     public void clearCurrentListenMethods(){
+        clear();
+        currentInputSequence = new char[]{8};
+    }
+
+
+    public void clearAllCurrentListenMethods(){
         clear();
         currentInputSequence = new char[]{127};
     }

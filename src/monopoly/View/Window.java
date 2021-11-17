@@ -5,6 +5,7 @@ import monopoly.Model.Configs;
 import monopoly.Model.Player;
 import monopoly.Model.SquareBackend;
 
+import java.util.ConcurrentModificationException;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -37,7 +38,7 @@ public class Window extends Thread{
 
     }
 
-    public void update() {
+    public void update() throws ConcurrentModificationException {
         if (!centralWidget.isChanged()) return;
         centralWidget.update();
         printContent(centralWidget.getContent());
@@ -49,7 +50,10 @@ public class Window extends Thread{
             deltaTime = new Date().getTime() - previousFrameTime;
             previousFrameTime = new Date().getTime();
 
-            update();
+            try{
+                update();
+            }catch (ConcurrentModificationException ignored){}
+
 
             try {
                 TimeUnit.MILLISECONDS.sleep(singleFrameDuration - (new Date().getTime()- previousFrameTime));
