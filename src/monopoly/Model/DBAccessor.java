@@ -12,12 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DBAccessor {
-    static final String DB_FILE_PATH = ".db_data.json";
-    GameController gameController;
-
-    public DBAccessor(GameController gameController) {
-        this.gameController = gameController;
-    }
+    static final String DB_FILE_PATH = "gameBackUp/data.json";
 
     public static HistoryGame[] getHistoryGameList() {
         return new HistoryGame[1];
@@ -33,7 +28,7 @@ public class DBAccessor {
     /**
      * Use BufferedWriter class to store all necessary data of current game to the file at DB_FILE_PATH.
      */
-    public void saveAllData() {
+    public static void saveAllData() {
         BufferedWriter out = null;
         File file = new File(DB_FILE_PATH);
         // create one if not exist
@@ -51,19 +46,19 @@ public class DBAccessor {
             out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, false), StandardCharsets.UTF_8));
 
             // game round
-            out.write(Integer.toString(this.gameController.round));
+            out.write(Integer.toString(GameController.round));
             out.newLine();
 
             // game which-player's-ture
-            out.write(Integer.toString(this.gameController.whosTurn));
+            out.write(Integer.toString(GameController.whosTurn));
             out.newLine();
 
             // number of players
-            int num_of_players = this.gameController.players.length;
+            int num_of_players = GameController.players.length;
             out.write(Integer.toString(num_of_players));
             out.newLine();
             for (int i = 0; i < num_of_players; ++i) {
-                Player player = this.gameController.players[i];
+                Player player = GameController.players[i];
 
                 // write player money
                 out.write(Integer.toString(player.getMoney()));
@@ -91,12 +86,11 @@ public class DBAccessor {
 
                 // write player property IDs
                 ArrayList<Integer> propertyIds = (ArrayList<Integer>) player.getPropertyIds().clone();
-                int num_of_propertyID = propertyIds.size();
-                out.write(Integer.toString(num_of_propertyID)); // write number of property IDs
+                out.write(Integer.toString(propertyIds.size())); // write number of property IDs
                 out.newLine();
-                for (int j = 0; j < num_of_propertyID; ++j) {
+                for (int id :propertyIds) {
                     // write IDs
-                    out.write(Integer.toString(propertyIds.get(j)));
+                    out.write(Integer.toString(id));
                     out.newLine();
                 }
 
@@ -129,7 +123,7 @@ public class DBAccessor {
      * Use BufferedReader class to read all necessary data of the game from the file at DB_FILE_PATH, and load to
      * current game.
      */
-    public GameController loadAllData() {
+    public static GameController loadAllData() {
         BufferedReader reader = null;
         try {
             FileInputStream fileInputStream = new FileInputStream(DB_FILE_PATH);
@@ -178,8 +172,8 @@ public class DBAccessor {
             for (int j = 0; j < players.size(); ++j)
                 player_list[j] = players.get(j);
             GameController gameController = new GameController(player_list);
-            gameController.round = round;
-            gameController.whosTurn = whosTurn;
+            GameController.round = round;
+            GameController.whosTurn = whosTurn;
 
             reader.close();
             return gameController;
@@ -195,22 +189,5 @@ public class DBAccessor {
             }
         }
         return null;
-    }
-
-    public static void main(String[] args) {
-        PreLoadModels preLoadModels = new PreLoadModels();
-        GlobalController.preLoadModels = preLoadModels;
-        Configs configs = new Configs();
-        GlobalController.config = configs;
-        Window window = new Window();
-        GlobalController.window = window;
-        DBAccessor dbAccessor = new DBAccessor(new GameController(new Player[]{
-                new Player(100, 1, "p1"),
-                new Player(9999, 2, "p2")
-        }));
-        System.out.println("dbAccessor created successfully.");
-
-        dbAccessor.saveAllData();
-        GameController gameController = dbAccessor.loadAllData();
     }
 }
