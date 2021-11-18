@@ -156,7 +156,7 @@ public class GamePage extends Widget{
             box.listenOnSelection();
         }
         else
-            try {TimeUnit.SECONDS.sleep(3);} catch (InterruptedException ignored) {}
+            try {TimeUnit.SECONDS.sleep(Configs.robotPendingTime);} catch (InterruptedException ignored) {}
         timer.stopCountDown();
     }
 
@@ -192,7 +192,7 @@ public class GamePage extends Widget{
             reNum = box.listenOnSelection();
         }
         else{
-            try {TimeUnit.SECONDS.sleep(3);} catch (InterruptedException ignored) {}
+            try {TimeUnit.SECONDS.sleep(Configs.robotPendingTime);} catch (InterruptedException ignored) {}
         }
         timer.stopCountDown();
         return reNum;
@@ -255,7 +255,7 @@ public class GamePage extends Widget{
             }
             else{
                 reNum = 0;
-                inJailAskBox.OnSelection(1);
+                inJailAskBox.OnSelection(0);
             }
             inJailAskBox.OnSelection(reNum);
         }

@@ -5,6 +5,7 @@ import monopoly.Model.Player;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 
 public class RankListBox extends Widget{
 
@@ -20,7 +21,8 @@ public class RankListBox extends Widget{
         addChildComponent(headLabel);
         addChildComponent(tableHeadLabel);
 
-        Arrays.sort(players);
+        Comparator<Player> cmp = Comparator.comparingInt(Player::getMoney);
+        Arrays.sort(players, cmp);
 
         int baseY = 4;
         for (int i=0; i<players.length; i++){

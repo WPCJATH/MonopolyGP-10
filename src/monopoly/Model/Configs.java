@@ -6,7 +6,8 @@ public class Configs {
     public static final int minimumHumanPlayerNumber = 1;
     public static final int nameLengthBound = 10;
     public static final int maxRoundNumber = 100;
-    public static final int waitForSelectionTime = 30;
+    public static final int waitForSelectionTime = 10;
+    public static final int robotPendingTime = 5;
 
     public static int DiceSideNumber = 4;
     public static int minimumChanceMoney = -200;

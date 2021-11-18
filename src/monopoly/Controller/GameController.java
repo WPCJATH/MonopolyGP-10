@@ -11,8 +11,8 @@ public class GameController {
     private final Dice dice;
     public final SquareBackend[] squareBackends;
     public static Player[] players;
-    private int round;
-    private int whosTurn;
+    public int round;
+    public int whosTurn;
     private final GamePage gamePage;
     private boolean isContinue;
     private boolean isPaused;
@@ -151,7 +151,7 @@ public class GameController {
     private void pauseListener(){
         while(true){
             GlobalController.keyboardListener.listenToPause();
-            System.out.println("Pause Detected.");
+            // System.out.println("Pause Detected.");
             if (!isContinue) break;
             isPaused = true;
             gamePage.setPaused();

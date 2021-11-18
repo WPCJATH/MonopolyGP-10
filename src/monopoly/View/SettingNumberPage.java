@@ -54,8 +54,13 @@ public class SettingNumberPage extends Widget{
                 case 'A', 'a' -> goLeft();
                 case 'D', 'd' -> goRight();
                 case 10 -> {
-                    if (currentSelection == 3) // next
+                    if (currentSelection == 3){ // next
+                        if (robotPlayerNumber + humanPlayerNumber < Configs.minimumPlayerNumber){
+                            addChildComponent(new Label(24, 1,1, "At least 2 players!"));
+                            continue;
+                        }
                         return 1;
+                    }
                     if (currentSelection == 4) // back
                         return 0;
                 }
@@ -111,7 +116,7 @@ public class SettingNumberPage extends Widget{
     private void goLeft(){
         switch (currentSelection){
             case 0:
-                if (humanPlayerNumber > 1){
+                if (humanPlayerNumber > Configs.minimumHumanPlayerNumber){
                     humanPlayerNumber--;
                     buttons[0].setText(PlayerNumberTransfer(humanPlayerNumber));
                 }
