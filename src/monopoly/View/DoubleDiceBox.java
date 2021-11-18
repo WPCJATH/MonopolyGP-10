@@ -37,7 +37,7 @@ public class DoubleDiceBox extends Widget{
 
         if (isMandatory){
             Label label1 = new Label(63, 1, 4,
-                    "You have to row the dice because you do not have enough money.");
+                    "You have to row the dice due to lack money.");
             addChildComponent(label1);
         }
     }

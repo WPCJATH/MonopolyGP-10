@@ -36,10 +36,12 @@ public class GamePage extends Widget{
 
         squareFronts = new SquareFront[20];
         for (int i=0; i<20; i++){
-            if (squareBackends[i].getType()==SquareType.PROPERTY)
+            if (squareBackends[i].getType()==SquareType.PROPERTY){
                 squareFronts[i] = new SquareFront(squarePositions[i][0], squarePositions[i][1], squareBackends[i]);
-            else
+            }
+            else{
                 squareFronts[i] = new SquareFront(squarePositions[i][0], squarePositions[i][1]);
+            }
             addChildComponent(squareFronts[i]);
         }
 
@@ -69,6 +71,7 @@ public class GamePage extends Widget{
         }
 
         inJailFront = new InJailFront(12, 31);
+
         addChildComponent(inJailFront);
 
         messageBar = new MessageBar();
@@ -285,6 +288,7 @@ public class GamePage extends Widget{
 
     public void makeMovement(int index, int steps){
         if (steps==0) return;
+        if (players[index].IsInPrison()) return;
         int originPositionID = players[index].getPositionID();
         if (originPositionID + steps > 21)
             throw new IllegalArgumentException("Cannot pass go through single call.");

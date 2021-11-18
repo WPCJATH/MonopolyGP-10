@@ -74,6 +74,14 @@ public class GameController {
                 onGoingHandler(i);
             round++;
         }
+        else{
+            for (int i=0;i<players.length;i++){
+                if (players[i].IsInPrison()){
+                    gamePage.goToJailMove(i);
+                }
+                gamePage.upDatePlayerBar(i);
+            }
+        }
 
         while (round <= Configs.maxRoundNumber){
 
