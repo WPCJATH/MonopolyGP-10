@@ -9,12 +9,18 @@ import java.util.concurrent.TimeUnit;
 public class Dice extends Widget{
     private final int playTime;
 
+    /**
+     * Constructor.
+     */
     public Dice(int x, int y){
         super(-1, -1, x, y);
         setContent(GlobalController.preLoadModels.diceUnknown);
         playTime = Configs.diceAnimationDisplayTime;
     }
 
+    /**
+     * Roll dice animation.
+     */
     public void animation(int number){
         long currentTime = new Date().getTime();
         while ((new Date().getTime() - currentTime)/1000 < playTime){

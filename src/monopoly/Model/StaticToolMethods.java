@@ -2,6 +2,9 @@ package monopoly.Model;
 
 import java.util.*;
 
+/**
+ * Utility methods class.
+ */
 public class StaticToolMethods {
     static String[] names = new String[]{"James", "Robert", "John", "Michael", "William", "David",
             "Richard", "Joseph", "Thomas", "Charles", "Christopher", "Daniel", "Matthew", "Anthony",
@@ -15,6 +18,9 @@ public class StaticToolMethods {
             "Logan", "Alan", "Juan", "Wayne", "Roy", "Ralph", "Randy", "Eugene", "Vincent", "Russell", "Elijah",
             "Louis", "Bobby", "Philip", "John"};
 
+    /**
+     * @return a random player name.
+     */
     public static String randomNameGenerator(){
         Random random = new Random();
         String name = names[random.nextInt(names.length-1)] + "-bot";
@@ -23,6 +29,13 @@ public class StaticToolMethods {
         return name;
     }
 
+    /**
+     * Generate bot players.
+     * @param names name list of the bot players.
+     * @param playerNumbers number of players to be generated.
+     * @param robotLevel difficulty levels of robots.
+     * @return
+     */
     public static Player[] playersGenerator(String[] names, int playerNumbers, int robotLevel){
         Player[] players = new Player[playerNumbers];
         int i = 0;

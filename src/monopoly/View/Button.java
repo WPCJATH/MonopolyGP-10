@@ -9,6 +9,12 @@ public class Button extends Widget{
     private char[] selectedBottom;
     private boolean isSelected;
 
+    /**
+     * Constructor.
+     * @param width width of button.
+     * @param x x-location of button.
+     * @param y y-location of button.
+     */
     public Button(int width , int x, int y){
         super(width, 3, x, y);
         if (width < 5)
@@ -20,6 +26,13 @@ public class Button extends Widget{
         setSelectionIssue();
     }
 
+    /**
+     * Constructor.
+     * @param width width of button.
+     * @param x x-location of button.
+     * @param y y-location of button.
+     * @param text text shown of the button.
+     */
     public Button(int width , int x, int y, String text){
         super(width, 3, x, y);
         if (width < 5)
@@ -32,6 +45,9 @@ public class Button extends Widget{
         setSelectionIssue();
     }
 
+    /**
+     * Select mark of the button.
+     */
     private void setSelectionIssue(){
         selectedTop = new char[getWidth()];
         selectedBottom = new char[getWidth()];
@@ -47,6 +63,10 @@ public class Button extends Widget{
         label.setText(text);
     }
 
+    /**
+     * Append text to the label on the button.
+     * @param ch the text to be appended.
+     */
     public void appendText(char ch){
         label.appendText(ch);
     }
@@ -55,14 +75,24 @@ public class Button extends Widget{
         return label.text;
     }
 
+
+    /**
+     * Enter a backSpace to the label of the button.
+     */
     public void backSpace(){
         label.backSpace();
     }
 
+    /**
+     * @return text length of the button label/
+     */
     public int getTextLen(){
         return label.getTextLen();
     }
 
+    /**
+     * Selected mark of the button.
+     */
     public void setSelected(){
         if (isSelected) return;
         char[][] content = getContent();
@@ -75,6 +105,9 @@ public class Button extends Widget{
         isSelected = true;
     }
 
+    /**
+     * UI of unselecting the button.
+     */
     public void setUnselected(){
         if (!isSelected) return;
         char[][] content = getContent();

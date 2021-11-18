@@ -4,6 +4,9 @@ import monopoly.Controller.GlobalController;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Cards to be draw on reachign chance squares.
+ */
 public class Card extends Widget{
     private boolean isSelected;
     private boolean isFlipped;
@@ -11,6 +14,12 @@ public class Card extends Widget{
     private final Label label1;
     private final int num;
 
+    /**
+     * Constructor.
+     * @param x x-pos of the widget.
+     * @param y y-pos of the widget.
+     * @param num number shown on the card.
+     */
     public Card(int x, int y, int num){
         super(-1, -1, x, y);
         setContent(GlobalController.preLoadModels.luckyDrawCardUnselected);
@@ -26,18 +35,27 @@ public class Card extends Widget{
         isFlipped = false;
     }
 
+    /**
+     * Selected mark of the card.
+     */
     public void setSelected() {
         if (isSelected) return;
         isSelected = true;
         setContent(GlobalController.preLoadModels.luckyDrawCardSelected);
     }
 
+    /**
+     * UI effect of unselecting the card.
+     */
     public void setUnselected(){
         if (!isSelected) return;
         isSelected = false;
         setContent(GlobalController.preLoadModels.luckyDrawCardUnselected);
     }
 
+    /**
+     * Flip the card.
+     */
     public void flip(){
         if (isFlipped) return;
         isFlipped = true;

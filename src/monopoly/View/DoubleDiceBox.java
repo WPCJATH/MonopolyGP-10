@@ -10,6 +10,9 @@ public class DoubleDiceBox extends Widget{
     private final int diceNumber1;
     private final int diceNumber2;
 
+    /**
+     * COnstrutor.
+     */
     public DoubleDiceBox(int id, String name, int diceNumber1, int diceNumber2, boolean isMandatory){
         super(-1,-1,26,12);
         setContent(GlobalController.preLoadModels.messageBox);

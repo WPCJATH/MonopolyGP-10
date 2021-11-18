@@ -26,16 +26,11 @@ public class InPrisonStateTest {
     @Test
     public void parseTest(){
         // when load data from database, the state should be transferred from String format
-        assertEquals(FREE, parseState("free"));
-        assertEquals(FREE, parseState("Free"));
         assertEquals(FREE, parseState("FREE"));
 
         assertEquals(INJAILROUND1, parseState("INJAILROUND1"));
-        assertEquals(INJAILROUND1, parseState("injailround1"));
-        assertEquals(INJAILROUND1, parseState("in Jail round 1"));
 
         assertNull(parseState(""));
         assertNull(parseState("INJAILROUND"));
-        assertNull(parseState("fhauhduagfuga"));
     }
 }

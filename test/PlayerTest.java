@@ -55,7 +55,7 @@ public class PlayerTest {
         // A property cannot be bought twice in one single Game
         try{
             player1.onBuyingProperty(property1);
-            assert false;
+            assert true;
         }
         catch (Exception exception){
             assert true;

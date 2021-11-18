@@ -18,6 +18,7 @@ public class GlobalController {
     public static Window window;
     public static Configs config;
 
+    // called when game starting.
     public static void onStart(){
         keyboardListener = new KeyboardListener();
         preLoadModels = new PreLoadModels();
@@ -45,6 +46,7 @@ public class GlobalController {
         }catch (Exception ignored){}
     }
 
+    // called when start a new game
     private static void OnGameStart() {
         config = new Configs();
         if  (OnSetting()==0) return;
@@ -62,10 +64,12 @@ public class GlobalController {
         window.goToMenuPage();
     }
 
+    // open menu page
     private static int GameMenu() {
         return window.listenOnSelection();
     }
 
+    // called when load an existed game
     private static void OnGameLoad() {
         config = new Configs();
         gameController = DBAccessor.LoadGame();
@@ -84,14 +88,17 @@ public class GlobalController {
         }
     }
 
+    // called when save a game
     private static void OnGameSave() {
         DBAccessor.SaveGame();
     }
 
+    // open user manual page
     private static void OnUserManual(){
         window.mainPage.displayUserManual();
     }
 
+    // open setting page
     private static int OnSetting() {
         window.mainPage.MoveToSettingPage1();
         while (true){

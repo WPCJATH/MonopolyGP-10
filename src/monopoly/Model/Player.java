@@ -19,14 +19,23 @@ public class Player {
     private boolean isRobot = false;
 
 
+    /**
+     * Constructor.
+     */
     public Player(int moneyAmount, int playerID, String nameString) {
         this(moneyAmount,playerID,nameString,1,false, InPrisonState.FREE.name());
     }
 
+    /**
+     * Constructor.
+     */
     public Player(int moneyAmount, int playerID, String nameString, boolean isBankrupt) {
         this(moneyAmount,playerID,nameString,1,isBankrupt, InPrisonState.FREE.name());
     }
 
+    /**
+     * Constructor.
+     */
     public Player(int moneyAmount, int playerID, String nameString, int position,
                   boolean isBankrupt, String inPrisonState) {
         this.moneyAmount = moneyAmount;
@@ -39,16 +48,27 @@ public class Player {
         this.propertyIds = new ArrayList<>();
     }
 
+    /**
+     * Tax the player.
+     * @return if bankrupt after eing taxed.
+     */
     public boolean onGoingIncomeTax() {
         setMoney(getMoney() - IncomeTaxSquare.calculateTax(getMoney()));
         return !isBankrupt;
     }
 
+    /**
+     * add money for passing Go square.
+     * @return true.
+     */
     public boolean onGoingGo() {
         setMoney(getMoney() + Configs.initialFunding);
         return true;
     }
 
+    /**
+     * @return whether user has enough money to buy the property.
+     */
     public boolean onGoingProperty(SquareBackend property) {
         if (property.hasHost()) {
             if (property.getHostID() == playerID)
@@ -59,6 +79,10 @@ public class Player {
         return getMoney() < property.getPrice();
     }
 
+    /**
+     * Buy a property.
+     * @return true
+     */
     public boolean onBuyingProperty(SquareBackend property) {
         if (property.hasHost())
             throw new IllegalArgumentException("Already have a host.");
@@ -70,11 +94,17 @@ public class Player {
         return true;
     }
 
+    /**
+     * @return true
+     */
     public boolean onGoingPrison() {
         updateInPrison();
         return true;
     }
 
+    /**
+     * @return false
+     */
     public boolean onStayingPrison() {
         if (InPrisonState.isOutNextRound(inPrisonState)) {
             setMoney(getMoney() - Configs.BailFee);
@@ -84,34 +114,55 @@ public class Player {
         return false;
     }
 
+    /**
+     * @return true
+     */
     public boolean onGoingChance() {
         return true;
     }
 
+    /**
+     * @return true
+     */
     public boolean onGoingFreeParking() {
         return true;
     }
 
+    /**
+     * @return true
+     */
     public boolean onGoingJustVisiting() {
         return true;
     }
 
 
+    /**
+     * @return whether current bot player will buy the property.
+     */
     public boolean ifBuy(SquareBackend squareBackend) {
         int diff = getMoney() - squareBackend.getPrice();
         return (diff >= Configs.robotMinimumToleranceMoney[robotLevel]);
     }
 
+    /**
+     * @return whether bot player pay to leave jail.
+     */
     public boolean isReleaseOnBail() {
         int diff = getMoney() - Configs.BailFee;
         return (diff >= Configs.robotMinimumToleranceMoney[robotLevel]);
     }
 
+    /**
+     * @return bot player choose a card.
+     */
     public int chooseCard(int lowerBound, int upperBound) {
         return randomNo.nextInt(upperBound - lowerBound) + lowerBound;
     }
 
 
+    /**
+     * @return whether bankrupt
+     */
     public boolean isBankrupt() {
         return isBankrupt;
     }
@@ -121,10 +172,16 @@ public class Player {
         propertyIds = new ArrayList<>();
     }
 
+    /**
+     * Set the in-prison-state to the next state.
+     */
     public void updateInPrison() {
         inPrisonState = InPrisonState.goNextState(inPrisonState);
     }
 
+    /**
+     * Set a player free from prison.
+     */
     public void setOutPrison() {
         inPrisonState = InPrisonState.FREE;
     }
@@ -133,6 +190,9 @@ public class Player {
         return inPrisonState;
     }
 
+    /**
+     * @return whether in prison.
+     */
     public boolean IsInPrison() {
         return InPrisonState.isInJail(inPrisonState);
     }

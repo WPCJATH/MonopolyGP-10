@@ -5,6 +5,9 @@ public class Property extends SquareBackend{
     private final int rent;
     private int HostID = -1;
 
+    /**
+     * Constructor.
+     */
     public Property(int positionID, String name, int price, int rent){
         super(SquareType.PROPERTY, positionID, name);
         this.price = price;
@@ -19,6 +22,9 @@ public class Property extends SquareBackend{
         return rent;
     }
 
+    /**
+     * @return whether current property has an owner.
+     */
     public boolean hasHost()
     {
         return !(HostID==-1);

@@ -6,7 +6,9 @@ import monopoly.View.Timer;
 
 import java.util.concurrent.TimeUnit;
 
-
+/**
+ * Controller of the whole game.
+ */
 public class GameController {
     private final Dice dice;
     public final SquareBackend[] squareBackends;
@@ -19,6 +21,9 @@ public class GameController {
     private int returnNum;
     public Timer timer;
 
+    /**
+     * Constructor.
+     */
     public GameController(Player[] players) {
         dice = new Dice();
         squareBackends = GlobalController.config.getSquareBackends();
@@ -35,6 +40,9 @@ public class GameController {
         this.gamePage = gamePage;
     }
 
+    /**
+     * @return dice number.
+     */
     private int getSingleDiceRandomNumber(){
         return dice.rollDice();
     }
@@ -46,6 +54,9 @@ public class GameController {
         return diceNumbers;
     }
 
+    /**
+     * Start the game.
+     */
     public int gameStart(){
         Thread pauseListenThread = new Thread(this::pauseListener);
         timer = new Timer();
@@ -68,6 +79,9 @@ public class GameController {
         return returnNum;
     }
 
+    /**
+     * Game main loop.
+     */
     public  void gameLoop() {
         if (round==0){
             for (int i=0; i<players.length;i++)
