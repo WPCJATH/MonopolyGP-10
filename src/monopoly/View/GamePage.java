@@ -6,7 +6,6 @@ import monopoly.Model.Player;
 import monopoly.Model.SquareBackend;
 import monopoly.Model.SquareType;
 
-import java.util.PrimitiveIterator;
 import java.util.concurrent.TimeUnit;
 
 public class GamePage extends Widget{
