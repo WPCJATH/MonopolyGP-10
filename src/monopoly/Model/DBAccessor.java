@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DBAccessor {
-    static final String DB_FILE_PATH = "gameBackUp/data.json";
+    static final String DB_FILE_PATH = "gameBackup/data.json";
 
     /**
      * Use BufferedWriter class to store all necessary data of current game to the file at DB_FILE_PATH.
@@ -108,7 +108,7 @@ public class DBAccessor {
     /**
      * Use BufferedReader class to read all necessary data of the game from the file at DB_FILE_PATH, and load to
      * current game.
-     *
+     * @Return Return a completed GameController; return null if any exception happens during LoadGame.
      */
     public static GameController LoadGame() {
         BufferedReader reader = null;
