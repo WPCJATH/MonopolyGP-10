@@ -302,5 +302,4 @@ public class GameController {
         players[index].onGoingGo();
         gamePage.upDatePlayerBar(index);
     }
-
 }
