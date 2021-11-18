@@ -41,7 +41,7 @@ public class GlobalController {
         }catch (Exception ignored){}
     }
 
-    private static void  OnGameStart() {
+    private static void OnGameStart() {
         config = new Configs();
         if  (OnSetting()==0) return;
 

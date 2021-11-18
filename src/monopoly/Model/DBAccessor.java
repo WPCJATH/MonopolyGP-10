@@ -1,9 +1,6 @@
 package monopoly.Model;
 
 import monopoly.Controller.GameController;
-import monopoly.Controller.GlobalController;
-import monopoly.View.PreLoadModels;
-import monopoly.View.Window;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -14,21 +11,10 @@ import java.util.List;
 public class DBAccessor {
     static final String DB_FILE_PATH = "gameBackUp/data.json";
 
-    public static HistoryGame[] getHistoryGameList() {
-        return new HistoryGame[1];
-    }
-
-    public static HistoryGame LoadGame(int gameId) {
-        return new HistoryGame(0, "", new Player[1], "");
-    }
-
-    public static void SaveGame(HistoryGame game) {
-    }
-
     /**
      * Use BufferedWriter class to store all necessary data of current game to the file at DB_FILE_PATH.
      */
-    public static void saveAllData() {
+    public static void SaveGame() {
         BufferedWriter out = null;
         File file = new File(DB_FILE_PATH);
         // create one if not exist
@@ -123,7 +109,7 @@ public class DBAccessor {
      * Use BufferedReader class to read all necessary data of the game from the file at DB_FILE_PATH, and load to
      * current game.
      */
-    public static GameController loadAllData() {
+    public static GameController LoadGame() {
         BufferedReader reader = null;
         try {
             FileInputStream fileInputStream = new FileInputStream(DB_FILE_PATH);
