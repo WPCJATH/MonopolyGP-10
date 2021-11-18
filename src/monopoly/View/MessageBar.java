@@ -68,6 +68,6 @@ public class MessageBar extends Widget{
     }
 
     private static void sleep(){
-        try {TimeUnit.SECONDS.sleep(4);} catch (InterruptedException ignored) {}
+        try {TimeUnit.SECONDS.sleep(5);} catch (InterruptedException ignored) {}
     }
 }

@@ -184,6 +184,14 @@ public class Player {
         return isRobot;
     }
 
+    public ArrayList<Integer> getPropertyIds(){
+        return propertyIds;
+    }
+
+    public int getRobotLevel(){
+        return robotLevel;
+    }
+
     public void setRobotLevel(int robotLevel) {
         this.robotLevel = robotLevel;
     }
