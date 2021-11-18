@@ -5,7 +5,6 @@ import monopoly.Model.Player;
 import monopoly.Model.StaticToolMethods;
 import monopoly.View.KeyboardListener;
 import monopoly.View.PreLoadModels;
-import monopoly.View.SettingNamePage;
 import monopoly.View.Window;
 
 public class GlobalController {
@@ -14,7 +13,6 @@ public class GlobalController {
     public static KeyboardListener keyboardListener;
     public static Window window;
     public static Configs config;
-    private static Player[] players;
 
     public static void onStart(){
         keyboardListener = new KeyboardListener();
@@ -47,7 +45,7 @@ public class GlobalController {
         config = new Configs();
         if  (OnSetting()==0) return;
 
-        players = StaticToolMethods.playersGenerator(window.mainPage.getPlayerNames(),
+        Player[] players = StaticToolMethods.playersGenerator(window.mainPage.getPlayerNames(),
                 window.mainPage.getPlayerNumber(), window.mainPage.getRobotLevel());
 
         window.goToGamePage(players, config.getSquareBackends());
@@ -56,8 +54,7 @@ public class GlobalController {
         if (gameController.gameStart()==1){
             OnGameSave();
         }
-        else
-            window.goToMenuPage();
+        window.goToMenuPage();
     }
 
     private static int GameMenu() {

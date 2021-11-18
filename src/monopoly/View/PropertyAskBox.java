@@ -70,7 +70,7 @@ public class PropertyAskBox extends Widget{
                         return 1;
                     else
                         return 0;
-                case 8:
+                case 8, 127:
                     return -1;
             }
         }

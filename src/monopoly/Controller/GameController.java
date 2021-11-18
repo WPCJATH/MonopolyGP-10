@@ -150,7 +150,7 @@ public class GameController {
 
     private void pauseListener(){
         while(true){
-            GlobalController.keyboardListener.listenOnPause();
+            GlobalController.keyboardListener.listenToPause();
             if (!isContinue) break;
             isPaused = true;
             gamePage.setPaused();

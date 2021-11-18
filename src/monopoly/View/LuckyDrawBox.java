@@ -53,7 +53,7 @@ public class LuckyDrawBox extends Widget{
                 case 10:
                     display();
                     return currentSelectIndex;
-                case 8:
+                case 8, 127:
                     return -1;
             }
         }

@@ -8,7 +8,7 @@ public class KeyboardListener extends Thread{
     private char[] currentInputSequence;
     private final Console console;
     private boolean pureEnterCaptured;
-    private boolean isListenOnPause;
+    private boolean isListenToPause;
     private boolean pauseCaptured;
 
     public KeyboardListener(){
@@ -16,7 +16,7 @@ public class KeyboardListener extends Thread{
         isContinue = true;
         console = System.console();
         pureEnterCaptured = false;
-        isListenOnPause = false;
+        isListenToPause = false;
         pauseCaptured = false;
     }
 
@@ -24,8 +24,9 @@ public class KeyboardListener extends Thread{
         isContinue = false;
     }
 
-    public void listenOnPause(){
-        isListenOnPause = true;
+    //listen whether p is pressed
+    public void listenToPause(){
+        isListenToPause = true;
         clear();
         while (true){
             try {TimeUnit.MILLISECONDS.sleep(200);} catch (InterruptedException ignored) {}
@@ -34,7 +35,7 @@ public class KeyboardListener extends Thread{
             if (charCaptured==127) break;
             if (charCaptured=='p' || charCaptured=='P') break;
         }
-        isListenOnPause = false;
+        isListenToPause = false;
         pauseCaptured =true;
     }
 
@@ -42,6 +43,7 @@ public class KeyboardListener extends Thread{
         pauseCaptured = false;
     }
 
+    //the pause page only
     public char listenCharInputOnPause(){
         clear();
         while ((currentInputSequence==null || currentInputSequence.length==0) && !pureEnterCaptured){
@@ -54,7 +56,10 @@ public class KeyboardListener extends Thread{
         return currentInputSequence[currentInputSequence.length-1];
     }
 
+
+    //regular input listener
     public char listenCharInput(){
+        try {TimeUnit.MILLISECONDS.sleep(200);} catch (InterruptedException ignored) {}
         clear();
         char charCaptured;
         while (true){
@@ -68,8 +73,7 @@ public class KeyboardListener extends Thread{
             }
             else{
                 charCaptured = currentInputSequence[currentInputSequence.length-1];
-                if (isListenOnPause && (charCaptured=='p' || charCaptured=='P')){
-                    clear();
+                if ((charCaptured=='p' || charCaptured=='P')){
                     continue;
                 }
                 return charCaptured;

@@ -45,7 +45,7 @@ public class DoubleDiceBox extends Widget{
     public int listenOnSelection(){
         while(true){
             switch (GlobalController.keyboardListener.listenCharInput()) {
-                case 10, 8 -> {
+                case 10, 8, 127 -> {
                     return 1;
                 }
                 default -> {}

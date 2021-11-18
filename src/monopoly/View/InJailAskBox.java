@@ -54,7 +54,7 @@ public class InJailAskBox extends Widget{
                     break;
                 case 10:
                     return currentSelectionIndex;
-                case 8:
+                case 8, 127:
                     return -1;
             }
         }

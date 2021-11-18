@@ -23,7 +23,13 @@ public class RankListBox extends Widget{
         }
 
         Button goToMenu = new Button(23, 21, 14, "Go to Menu");
+        goToMenu.setSelected();
         addChildComponent(goToMenu);
+    }
+
+    public int listenOnSelection(){
+        GlobalController.keyboardListener.listenCharInputOnPause();
+        return 0;
     }
 
     private static String tableContentGenerator(int no, Player player){
