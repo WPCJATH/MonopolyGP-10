@@ -1,7 +1,5 @@
 package monopoly.View;
 
-import java.util.Arrays;
-
 public class PreLoadModels {
     static class  DiceModel {
         private static final String unknown = """
@@ -251,6 +249,34 @@ public class PreLoadModels {
                  '--------------'\s""";
     }
 
+    private static class UserManualModel {
+        private static final String userManual = """
+                .-----------------------------------------------------------------------------------------.
+                |                                      User Manual                                        |
+                |                                                                                         |
+                |  User operation: After each key is pressed, user should press “ENTER” to let the        |
+                |  operation work. All the operations below are based on this.                            |
+                |                                                                                         |
+                |  Menu Page: User should press “W” and “S” to change his/her choice.                     |
+                |                                                                                         |
+                |  Setting Page: User can press “W”, “A”, “S”, “D” and then “ENTER” to decide the game’s  |
+                |  player number, robot number and robot level. To be specific, “W” means up, “S” means   |
+                |  down, “A” means left and “D” means down. Once decided, user can press “ENTER” to move  |
+                |  to the next stage.                                                                     |
+                |                                                                                         |
+                |  Game Page: After the game begins, user should press “ENTER” to roll the dice.          |
+                |  When facing different events, user should press “A” and “D” to change the choice and   |
+                |  “ENTER” to make the decision. During the game, user can press “P” then “ENTER” to      |
+                |  pause the game.                                                                        |
+                |                                                                                         |
+                |  Pause Page: User should press “W” and “S” to change his/her choice.                    |
+                |                                                                                         |
+                |  Rank List Page: User should press “W” and “S” to change his/her choice.                |
+                |                                                                                         |
+                |                              Press "Enter" to return Menu                               |
+                '-----------------------------------------------------------------------------------------'""";
+    }
+
     public char[][] diceUnknown;
     public char[][] diceNumber1;
     public char[][] diceNumber2;
@@ -275,6 +301,8 @@ public class PreLoadModels {
 
     public char[][] gameBoard;
     public char[][] messageBar;
+
+    public char[][] userManual;
 
     public PreLoadModels(){
         diceUnknown = load(DiceModel.unknown);
@@ -302,6 +330,7 @@ public class PreLoadModels {
         gameBoard = load(GameBoardModel.GameBoard);
         messageBar = load(GameBoardModel.messageBar);
 
+        userManual = load(UserManualModel.userManual);
     }
 
 

@@ -75,6 +75,13 @@ public class MainPage extends Widget{
         settingPage1.resetSelection();
     }
 
+    public void displayUserManual(){
+        UserManual userManual = new UserManual();
+        addChildComponent(userManual);
+        userManual.listenOnSelection();
+        removeChildComponent(userManual);
+    }
+
     @Override
     public int listenOnSelection(){
         if (pageIndex==0) return menuPage.listenOnSelection();

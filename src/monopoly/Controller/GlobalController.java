@@ -69,7 +69,7 @@ public class GlobalController {
     }
 
     private static void OnUserManual(){
-
+        window.mainPage.displayUserManual();
     }
 
     private static int OnSetting() {

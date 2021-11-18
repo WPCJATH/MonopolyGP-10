@@ -13,8 +13,8 @@ public class Configs {
     public static final int messageOccupyTime = 5;
 
     public static int DiceSideNumber = 4;
-    public static int minimumChanceMoney = -200;
-    public static int maximumChanceMoney = 500;
+    public static int minimumChanceMoney = -300;
+    public static int maximumChanceMoney = 200;
     public static int BailFee = 150;
     public static int initialFunding = 500;
     public static int taxRate = 10;
