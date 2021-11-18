@@ -158,6 +158,7 @@ public class GameController {
             if (returnNum==1 || returnNum==2){
                 isContinue = false;
                 gamePage.setTerminated();
+                GlobalController.keyboardListener.setUnPause();
                 GlobalController.keyboardListener.clearAllCurrentListenMethods();
                 break;
             }

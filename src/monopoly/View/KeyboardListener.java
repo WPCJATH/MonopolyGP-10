@@ -29,11 +29,11 @@ public class KeyboardListener extends Thread{
         isListenToPause = true;
         clear();
         while (true){
-            try {TimeUnit.MILLISECONDS.sleep(200);} catch (InterruptedException ignored) {}
             if (currentInputSequence==null  || currentInputSequence.length==0) continue;
             char charCaptured = currentInputSequence[currentInputSequence.length-1];
             if (charCaptured==127) break;
             if (charCaptured=='p' || charCaptured=='P') break;
+            try {TimeUnit.MILLISECONDS.sleep(200);} catch (InterruptedException ignored) {}
         }
         isListenToPause = false;
         pauseCaptured =true;
@@ -59,11 +59,10 @@ public class KeyboardListener extends Thread{
 
     //regular input listener
     public char listenCharInput(){
-        try {TimeUnit.MILLISECONDS.sleep(200);} catch (InterruptedException ignored) {}
+        try {TimeUnit.MILLISECONDS.sleep(300);} catch (InterruptedException ignored) {}
         clear();
         char charCaptured;
         while (true){
-            try {TimeUnit.MILLISECONDS.sleep(200);} catch (InterruptedException ignored) {}
             if (pauseCaptured) continue;
             if (currentInputSequence==null || currentInputSequence.length==0){
                 if (pureEnterCaptured){
@@ -78,6 +77,7 @@ public class KeyboardListener extends Thread{
                 }
                 return charCaptured;
             }
+            try {TimeUnit.MILLISECONDS.sleep(200);} catch (InterruptedException ignored) {}
         }
     }
 
