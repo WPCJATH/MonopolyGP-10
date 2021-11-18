@@ -23,8 +23,8 @@ public class GameController {
         dice = new Dice();
         squareBackends = GlobalController.config.getSquareBackends();
         GameController.players = players;
-        round = 1;
-        whosTurn = 0;
+        GameController.round = 1;
+        GameController.whosTurn = 0;
         gamePage = GlobalController.window.gamePage;
 
         isContinue = true;

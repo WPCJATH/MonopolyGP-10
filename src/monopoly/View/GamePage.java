@@ -107,6 +107,7 @@ public class GamePage extends Widget{
         addChildComponent(stateBar);
         new Thread(stateBar).start();
         this.timer = timer;
+        System.out.println("Timer is started.");
     }
 
     public void setPlayerBarSelected(int index){

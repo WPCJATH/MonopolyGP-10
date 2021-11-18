@@ -98,7 +98,7 @@ public class DBAccessor {
             } catch (Exception ignored) {ignored.printStackTrace();}
         }
         // debug info
-        System.out.println("Data stored successfully!");
+        // System.out.println("Data stored successfully!");
     }
 
     /**
