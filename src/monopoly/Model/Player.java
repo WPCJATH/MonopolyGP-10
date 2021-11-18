@@ -1,6 +1,7 @@
 package monopoly.Model;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Random;
 
 public class Player {
@@ -18,49 +19,39 @@ public class Player {
     private boolean isRobot = false;
 
 
-    public Player(int moneyAmount, int playerID, String nameString){
-        this.moneyAmount = moneyAmount;
-        this.playerID = playerID;
-        this.nameString = nameString;
-        positionID = 1;
-        isBankrupt = false;
-        inPrisonState = InPrisonState.FREE;
-        randomNo = new Random();
-        propertyIds = new ArrayList<>();
+    public Player(int moneyAmount, int playerID, String nameString) {
+        this(moneyAmount,playerID,nameString,1,false, InPrisonState.FREE.name());
     }
 
-    public Player(int moneyAmount, int playerID, String nameString, boolean isBankrupt){
-        this.moneyAmount = moneyAmount;
-        this.playerID = playerID;
-        this.nameString = nameString;
-        this.isBankrupt = isBankrupt;
-        randomNo = new Random();
+    public Player(int moneyAmount, int playerID, String nameString, boolean isBankrupt) {
+        this(moneyAmount,playerID,nameString,1,isBankrupt, InPrisonState.FREE.name());
     }
 
     public Player(int moneyAmount, int playerID, String nameString, int position,
-                  boolean isBankrupt, String inPrisonState){
+                  boolean isBankrupt, String inPrisonState) {
         this.moneyAmount = moneyAmount;
         this.playerID = playerID;
         this.nameString = nameString;
         this.positionID = position;
         this.isBankrupt = isBankrupt;
         this.inPrisonState = InPrisonState.parseState(inPrisonState);
-        randomNo = new Random();
+        this.randomNo = new Random();
+        this.propertyIds = new ArrayList<>();
     }
 
-    public boolean onGoingIncomeTax(){
+    public boolean onGoingIncomeTax() {
         setMoney(getMoney() - IncomeTaxSquare.calculateTax(getMoney()));
         return !isBankrupt;
     }
 
-    public boolean onGoingGo(){
+    public boolean onGoingGo() {
         setMoney(getMoney() + Configs.initialFunding);
         return true;
     }
 
-    public boolean onGoingProperty(SquareBackend property){
-        if (property.hasHost()){
-            if (property.getHostID()==playerID)
+    public boolean onGoingProperty(SquareBackend property) {
+        if (property.hasHost()) {
+            if (property.getHostID() == playerID)
                 return true;
             setMoney(getMoney() - property.getRent());
             return true;
@@ -68,7 +59,7 @@ public class Player {
         return getMoney() < property.getPrice();
     }
 
-    public boolean onBuyingProperty(SquareBackend property){
+    public boolean onBuyingProperty(SquareBackend property) {
         if (property.hasHost())
             throw new IllegalArgumentException("Already have a host.");
         if (getMoney() < property.getPrice())
@@ -79,13 +70,13 @@ public class Player {
         return true;
     }
 
-    public boolean onGoingPrison(){
+    public boolean onGoingPrison() {
         updateInPrison();
         return true;
     }
 
-    public boolean onStayingPrison(){
-        if (InPrisonState.isOutNextRound(inPrisonState)){
+    public boolean onStayingPrison() {
+        if (InPrisonState.isOutNextRound(inPrisonState)) {
             setMoney(getMoney() - Configs.BailFee);
             setOutPrison();
             return true;
@@ -93,9 +84,17 @@ public class Player {
         return false;
     }
 
-    public boolean onGoingChance(){return true;}
-    public boolean onGoingFreeParking(){return true;}
-    public boolean onGoingJustVisiting(){return true;}
+    public boolean onGoingChance() {
+        return true;
+    }
+
+    public boolean onGoingFreeParking() {
+        return true;
+    }
+
+    public boolean onGoingJustVisiting() {
+        return true;
+    }
 
 
     public boolean ifBuy(SquareBackend squareBackend) {
@@ -103,7 +102,7 @@ public class Player {
         return (diff >= Configs.robotMinimumToleranceMoney[robotLevel]);
     }
 
-    public boolean isReleaseOnBail(){
+    public boolean isReleaseOnBail() {
         int diff = getMoney() - Configs.BailFee;
         return (diff >= Configs.robotMinimumToleranceMoney[robotLevel]);
     }
@@ -117,7 +116,7 @@ public class Player {
         return isBankrupt;
     }
 
-    public void setBankrupt(){
+    public void setBankrupt() {
         isBankrupt = true;
         propertyIds = new ArrayList<>();
     }
@@ -134,7 +133,7 @@ public class Player {
         return inPrisonState;
     }
 
-    public boolean IsInPrison(){
+    public boolean IsInPrison() {
         return InPrisonState.isInJail(inPrisonState);
     }
 
@@ -168,27 +167,46 @@ public class Player {
         this.positionID = positionID;
     }
 
-    public int getPropertyNumber(){
+    public int getPropertyNumber() {
         return propertyIds.size();
     }
 
-    public void setPropertyIds(ArrayList<Integer> propertyIds){}
+    public void setPropertyIds(ArrayList<Integer> propertyIds) {
+    }
 
-    public void setRobot() {isRobot = true;}
+    public void setRobot() {
+        isRobot = true;
+    }
 
     public boolean isRobot() {
         return isRobot;
     }
 
-    public ArrayList<Integer> getPropertyIds(){
+    public ArrayList<Integer> getPropertyIds() {
         return propertyIds;
     }
 
-    public int getRobotLevel(){
+    public int getRobotLevel() {
         return robotLevel;
     }
 
     public void setRobotLevel(int robotLevel) {
         this.robotLevel = robotLevel;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Player player = (Player) o;
+        return moneyAmount == player.moneyAmount && playerID == player.playerID && isBankrupt == player.isBankrupt &&
+                positionID == player.positionID && robotLevel == player.robotLevel && isRobot == player.isRobot &&
+                Objects.equals(nameString, player.nameString) && inPrisonState == player.inPrisonState &&
+                Objects.equals(propertyIds, player.propertyIds);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(moneyAmount, playerID, nameString, isBankrupt, inPrisonState, positionID, propertyIds, robotLevel, isRobot);
     }
 }
