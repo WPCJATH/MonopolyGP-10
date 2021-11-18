@@ -4,6 +4,14 @@ import monopoly.Controller.GlobalController;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Displayed by Class Gamepage when the user hint "p+Enter" to pause the game.
+ *
+ * 3 Selections are showned:
+ *  Continue: continue the game
+ *  Save and Quit: Save the game and then back to the menu
+ *  Quit: quit the game and back to the menu without save
+ */
 public class PauseBox extends Widget implements Runnable{
     private final Label headLabel;
 
@@ -12,6 +20,9 @@ public class PauseBox extends Widget implements Runnable{
 
     private boolean isContinue;
 
+    /**
+     * The contructor
+     */
     public PauseBox() {
         super(-1, -1, 26, 12);
         setContent(GlobalController.preLoadModels.messageBox);
@@ -33,9 +44,10 @@ public class PauseBox extends Widget implements Runnable{
         isContinue = true;
     }
 
+    @Override
     public int listenOnSelection(){
-        while (true){
-            switch (GlobalController.keyboardListener.listenCharInputOnPause()){
+        while (true) {
+            switch (GlobalController.keyboardListener.listenCharInputOnPause()) {
                 case 'w':
                 case 'W':
                     goPrevious();
@@ -57,8 +69,9 @@ public class PauseBox extends Widget implements Runnable{
 
     private void goNext(){
         buttons[currenSelectIndex].setUnselected();
-        if (currenSelectIndex < buttons.length-1)
+        if (currenSelectIndex < buttons.length - 1) {
             currenSelectIndex++;
+        }
         else
             currenSelectIndex = 0;
         buttons[currenSelectIndex].setSelected();
