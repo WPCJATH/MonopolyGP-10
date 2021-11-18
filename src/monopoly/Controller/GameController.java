@@ -26,7 +26,9 @@ public class GameController {
         round = 1;
         whosTurn = 0;
         gamePage = GlobalController.window.gamePage;
+
         isContinue = true;
+        isPaused = false;
     }
 
     private int getSingleDiceRandomNumber(){
@@ -41,7 +43,6 @@ public class GameController {
     }
 
     public int gameStart(){
-        Thread gameLoopThread = new Thread(this::gameLoop);
         Thread pauseListenThread = new Thread(this::pauseListener);
         timer = new Timer();
 
@@ -49,13 +50,12 @@ public class GameController {
         gamePage.setTimer(timer);
 
         pauseListenThread.start();
-        gameLoopThread.start();
+        gameLoop();
 
         try {
-            gameLoopThread.join(2000);
-            pauseListenThread.join(2000);
+            pauseListenThread.join();
             timer.setStop();
-            timer.join(1000);
+            timer.join();
         }
         catch (InterruptedException ignored) {}
 
@@ -75,7 +75,8 @@ public class GameController {
             gamePage.setRound(round);
             gamePage.roundMessage(round);
 
-            for (int i = 0; (i<players.length && !pauseCheck());i++){
+            if (pauseCheck()) break;
+            for (int i = 0; i<players.length;i++){
                 if (i!=whosTurn) continue;
                 if (players[i].isBankrupt()){
                     whosTurn++;
@@ -122,7 +123,6 @@ public class GameController {
                     }
                     gamePage.brokeMessage(i+1);
                 }
-
                 whosTurn++;
             }
 

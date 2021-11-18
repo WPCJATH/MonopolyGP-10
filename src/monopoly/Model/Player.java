@@ -1,5 +1,6 @@
 package monopoly.Model;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Player {
@@ -9,7 +10,7 @@ public class Player {
     private boolean isBankrupt;
     public InPrisonState inPrisonState;
     private int positionID;
-    private int propertyNumber;
+    private ArrayList<Integer> propertyIds;
 
 
     private final Random randomNo;
@@ -24,8 +25,8 @@ public class Player {
         positionID = 1;
         isBankrupt = false;
         inPrisonState = InPrisonState.FREE;
-        propertyNumber = 0;
         randomNo = new Random();
+        propertyIds = new ArrayList<>();
     }
 
     public Player(int moneyAmount, int playerID, String nameString, boolean isBankrupt){
@@ -74,7 +75,7 @@ public class Player {
             throw new IllegalCallerException("Cannot afford.");
         setMoney(getMoney() - property.getPrice());
         property.setHostID(playerID);
-        propertyNumber++;
+        propertyIds.add(property.getPositionID());
         return true;
     }
 
@@ -124,7 +125,7 @@ public class Player {
 
     public void setBankrupt(){
         isBankrupt = true;
-        propertyNumber = 0;
+        propertyIds = new ArrayList<>();
     }
 
     public void updateInPrison() {
@@ -174,7 +175,7 @@ public class Player {
     }
 
     public int getPropertyNumber(){
-        return propertyNumber;
+        return propertyIds.size();
     }
 
     public void setRobot() {isRobot = true;}

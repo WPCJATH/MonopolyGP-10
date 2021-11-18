@@ -3,6 +3,9 @@ package monopoly.View;
 import monopoly.Controller.GlobalController;
 import monopoly.Model.Player;
 
+import java.util.Arrays;
+import java.util.Collections;
+
 public class RankListBox extends Widget{
 
     public RankListBox(Player[] players) {
@@ -16,6 +19,8 @@ public class RankListBox extends Widget{
 
         addChildComponent(headLabel);
         addChildComponent(tableHeadLabel);
+
+        Arrays.sort(players);
 
         int baseY = 4;
         for (int i=0; i<players.length; i++){
@@ -33,7 +38,7 @@ public class RankListBox extends Widget{
     }
 
     private static String tableContentGenerator(int no, Player player){
-        return no +
+        return (no+1) +
                 addBlanks(String.valueOf(player.getPlayerID()), 6) +
                 addBlanks(player.getNameString(), 12) +
                 addBlanks(String.valueOf(player.getMoney()), 12) + "HKD" +
