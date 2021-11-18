@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DBAccessor {
-    public static final String DB_FILE_PATH = "gameBackup/data.json";
+    public static final String DB_FILE_PATH = "./gameBackup/data.json";
 
     /**
      * Use BufferedWriter class to store all necessary data of current game to the file at DB_FILE_PATH.
@@ -16,12 +16,17 @@ public class DBAccessor {
     public static void SaveGame() {
         BufferedWriter out = null;
         File file = new File(DB_FILE_PATH);
+        System.out.println(System.getProperty("user.dir"));
         // create one if not exist
         if (!file.exists()) {
+            System.out.println("Not exist");
             try {
                 file.createNewFile();
-            } catch (IOException ignored) {}
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+        System.out.println("Exist");
 
         // write data into file
         try {
@@ -87,13 +92,13 @@ public class DBAccessor {
 
             }
 
-        } catch (Exception ignored) {
+        } catch (Exception ignored) { ignored.printStackTrace();
         } finally {
             try {
                 if (out != null) {
                     out.close();
                 }
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {ignored.printStackTrace();}
         }
         // debug info
         System.out.println("Data stored successfully!");

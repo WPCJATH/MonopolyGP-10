@@ -52,6 +52,8 @@ public class Configs {
     // The game runs dumb in append module. Better not change it.
     public static final String displayMode = "refresh"; // "append"
 
+
+    // To create the array of square backends
     public Configs(){
         squareBackends = new SquareBackend[20];
         loadSquares();
@@ -61,19 +63,7 @@ public class Configs {
         return squareBackends;
     }
 
-    public Configs(int diceSides, int minChanceMoney, int maxChanceMoney,
-                   int bailFee, int initialFunding, int taxRate, SquareBackend[] squareBackends)
-    {
-        Configs.DiceSideNumber = diceSides;
-        Configs.minimumChanceMoney  = minChanceMoney;
-        Configs.maximumChanceMoney = maxChanceMoney;
-        Configs.BailFee = bailFee;
-        Configs.initialFunding = initialFunding;
-        Configs.taxRate = taxRate;
-        Configs.squareBackends = squareBackends;
-    }
-
-
+    // Load all square backends
     private void loadSquares(){
         int i = 0;
         squareBackends[i++] = new GoSquare(1);
