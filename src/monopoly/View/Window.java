@@ -62,6 +62,7 @@ public class Window extends Thread{
         if (Configs.displayMode.equals("refresh")){
             System.out.print("\033[2J");
         }
+        System.out.println("Push one more enter to terminate.");
     }
 
     public void setStop(){isContinue = false;}

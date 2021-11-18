@@ -22,7 +22,7 @@ public class Player {
         this.moneyAmount = moneyAmount;
         this.playerID = playerID;
         this.nameString = nameString;
-        positionID = 1;
+        positionID = 13;
         isBankrupt = false;
         inPrisonState = InPrisonState.FREE;
         randomNo = new Random();
@@ -100,18 +100,12 @@ public class Player {
 
     public boolean ifBuy(SquareBackend squareBackend) {
         int diff = getMoney() - squareBackend.getPrice();
-        if (isRobot){
-            return diff >= Configs.robotMinimumToleranceMoney[robotLevel];
-        }
-        return diff >= Configs.robotMinimumToleranceMoney[1];
+        return (diff >= Configs.robotMinimumToleranceMoney[robotLevel]);
     }
 
     public boolean isReleaseOnBail(){
         int diff = getMoney() - Configs.BailFee;
-        if (isRobot){
-            return diff >= Configs.robotMinimumToleranceMoney[robotLevel];
-        }
-        return diff >= Configs.robotMinimumToleranceMoney[1];
+        return (diff >= Configs.robotMinimumToleranceMoney[robotLevel]);
     }
 
     public int chooseCard(int lowerBound, int upperBound) {

@@ -77,6 +77,8 @@ public class PropertyAskBox extends Widget{
     }
 
     public void OnSelection(int selection){
+        if (selection!=0 && selection!=1)
+            throw new IllegalArgumentException();
         while (selection!=currentSelectionIndex){
             go();
             try {TimeUnit.MILLISECONDS.sleep(1000);} catch (InterruptedException ignored) {}

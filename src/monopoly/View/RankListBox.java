@@ -21,7 +21,7 @@ public class RankListBox extends Widget{
         addChildComponent(headLabel);
         addChildComponent(tableHeadLabel);
 
-        Comparator<Player> cmp = Comparator.comparingInt(Player::getMoney);
+        Comparator<Player> cmp = (o1, o2) -> o2.getMoney() - o1.getMoney();
         Arrays.sort(players, cmp);
 
         int baseY = 4;

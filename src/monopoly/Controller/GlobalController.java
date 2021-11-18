@@ -54,6 +54,7 @@ public class GlobalController {
         if (gameController.gameStart()==1){
             OnGameSave();
         }
+        keyboardListener.setUnPause();
         window.goToMenuPage();
     }
 

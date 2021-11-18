@@ -6,6 +6,7 @@ import monopoly.Model.Player;
 import monopoly.Model.SquareBackend;
 import monopoly.Model.SquareType;
 
+import java.util.PrimitiveIterator;
 import java.util.concurrent.TimeUnit;
 
 public class GamePage extends Widget{
@@ -98,8 +99,8 @@ public class GamePage extends Widget{
     public void setTerminated(){
         isContinue = false;
         terminateStateBar();
-        for (PlayerBar playerBar: playerBars)
-            playerBar.setUnselected();
+        for (int i=0; i<players.length;i++)
+            playerBars[i].setUnselected();
     }
 
     public boolean waitForPause(){
@@ -249,19 +250,16 @@ public class GamePage extends Widget{
         int reNum = listenOnReturnSelection(inJailAskBox, index);
         if (waitForPause()) return -2;
         if (reNum!=-1){
-            if (players[index].isReleaseOnBail()){
+            if (players[index].isReleaseOnBail())
                 reNum = 1;
-                inJailAskBox.OnSelection(1);
-            }
-            else{
+            else
                 reNum = 0;
-                inJailAskBox.OnSelection(0);
-            }
             inJailAskBox.OnSelection(reNum);
         }
 
         if (waitForPause()) return -2;
         removeChildComponent(inJailAskBox);
+        System.out.println(reNum);
         return reNum;
     }
 

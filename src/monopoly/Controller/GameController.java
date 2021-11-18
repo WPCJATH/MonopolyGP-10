@@ -187,26 +187,29 @@ public class GameController {
 
 
     private boolean onInJailHandler(int index) {
-        boolean reValue = true;
         if (!players[index].IsInPrison()) return true;
-
+        boolean reValue = true;
         if (!players[index].onStayingPrison()){
-            int reNum = gamePage.displayInJailAskBox(index);
-            if (reNum==1){
+            int reNum1;
+            reNum1 = gamePage.displayInJailAskBox(index);
+
+            if (reNum1==1){
                 if (players[index].getMoney() < Configs.BailFee){
-                    reNum = gamePage.displayDoubleDiceBox(index, getDoubleDiceRandomNumber(), true);
-                    if (reNum==1){
+                    int reNum2;
+                    reNum2 = gamePage.displayDoubleDiceBox(index, getDoubleDiceRandomNumber(), true);
+                    if (reNum2==1){
                         players[index].setOutPrison();
                         gamePage.setOutOfJail(index);
                         gamePage.releasedMessage();
                     }
-                    else if (reNum==0){
-                        players[index].updateInPrison();
-                        gamePage.failedMessage();
-                        reValue = false;
+                    else if (reNum2==0){
+                            players[index].updateInPrison();
+                            gamePage.failedMessage();
+                            reValue = false;
                     }
                     else{
-                        return true;
+                        System.out.println(7);
+                        return false;
                     }
                 }
                 else{
@@ -216,29 +219,34 @@ public class GameController {
                     gamePage.releasedMessage();
                 }
             }
-            else if (reNum==0){
-                reNum = gamePage.displayDoubleDiceBox(index, getDoubleDiceRandomNumber(), false);
-                if (reNum==1){
-                    players[index].setOutPrison();
-                    gamePage.setOutOfJail(index);
-                    gamePage.releasedMessage();
-                }
-                else if (reNum==0){
-                    gamePage.failedMessage();
-                    players[index].updateInPrison();
-                    reValue = false;
-                }
-                else
-                    return true;
+            else if (reNum1==0){
+                    int reNum3;
+                    reNum3 = gamePage.displayDoubleDiceBox(index, getDoubleDiceRandomNumber(), false);
+                    if (reNum3==1){
+                        players[index].setOutPrison();
+                        gamePage.setOutOfJail(index);
+                        gamePage.releasedMessage();
+                    }
+                    else if (reNum3==0){
+                            gamePage.failedMessage();
+                            players[index].updateInPrison();
+                            reValue = false;
+                        }
+                    else{
+                        System.out.println(8);
+                        return false;
+                    }
             }
             else{
-                return true;
+                System.out.println(9);
+                return false;
             }
         }
         else{
             gamePage.setOutOfJail(index);
             gamePage.releasedMessage();
         }
+
         gamePage.upDatePlayerBar(index);
         return reValue;
     }
