@@ -33,14 +33,6 @@ public class GamePage extends Widget{
         addChildComponent(incomeTaxLabel);
         addChildComponent(goInitialMoneyLabel);
 
-        assert(squares[0].getType() == SquareType.GO);
-        assert(squares[3].getType() == SquareType.INCOMETAX);
-        assert(squares[5].getType() == SquareType.INJAILORJUSTVISITING);
-        assert(squares[8].getType() == SquareType.CHANCE);
-        assert(squares[10].getType() == SquareType.FREEPARKING);
-        assert(squares[12].getType() == SquareType.CHANCE);
-        assert(squares[16].getType() == SquareType.GOTOJAIL);
-        assert(squares[18].getType() == SquareType.CHANCE);
 
         squareFronts = new SquareFront[20];
         for (int i=0; i<20; i++){

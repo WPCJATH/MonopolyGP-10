@@ -16,17 +16,14 @@ public class DBAccessor {
     public static void SaveGame() {
         BufferedWriter out = null;
         File file = new File(DB_FILE_PATH);
-        System.out.println(System.getProperty("user.dir"));
         // create one if not exist
         if (!file.exists()) {
-            System.out.println("Not exist");
             try {
                 file.createNewFile();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        System.out.println("Exist");
 
         // write data into file
         try {
