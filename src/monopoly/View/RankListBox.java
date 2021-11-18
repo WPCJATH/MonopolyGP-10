@@ -6,7 +6,7 @@ import monopoly.Model.Player;
 public class RankListBox extends Widget{
 
     public RankListBox(Player[] players) {
-        super(-1,-1,26,7);
+        super(-1,-1,26,12);
         setContent(GlobalController.preLoadModels.messageBox);
         Label headLabel = new Label(63, 1, 1,
                 "Ranking List");

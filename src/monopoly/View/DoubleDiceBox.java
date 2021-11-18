@@ -20,7 +20,7 @@ public class DoubleDiceBox extends Widget{
         Label headLabel = new Label(63, 1, 1,
                 " ↑ Time Limit            Roll two Dice                         ");
 
-        Label callNameLabel = new Label(25, 1, 2, "   To Player " + id + ' ' + name + ':');
+        Label callNameLabel = new Label(27, 1, 2, "   To Player " + id + ' ' + name + ':');
         callNameLabel.setLayout("left");
         Label messageLabel = new Label(63, 1, 3, "Press (push Enter) the Roll button to row your dice.");
         dice1 = new Dice(16, 6);

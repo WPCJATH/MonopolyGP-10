@@ -17,7 +17,7 @@ public class SingleDiceBox extends Widget{
         Label headLabel = new Label(63, 1, 1,
                 " ↑ Time Limit            Roll a Dice                           ");
 
-        Label callNameLabel = new Label(25, 1, 2, "  To Player " + id + ' ' + name + ":");
+        Label callNameLabel = new Label(27, 1, 2, "  To Player " + id + ' ' + name + ":");
         callNameLabel.setLayout("left");
         Label messageLabel = new Label(63, 1, 3, "Press (push Enter) the Roll button to row your dice.");
         dice = new Dice(27, 6);

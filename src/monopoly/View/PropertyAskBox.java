@@ -18,7 +18,7 @@ public class PropertyAskBox extends Widget{
         Label headLabel = new Label(63, 1, 1,
                 " ↑ Time Limit          Buy a Property                          ");
 
-        Label callNameLabel = new Label(25, 1, 2, "  To Player " + id + ' ' + name+':');
+        Label callNameLabel = new Label(27, 1, 2, "  To Player " + id + ' ' + name+':');
         callNameLabel.setLayout("left");
         Label messageLabel = new Label(63, 1, 3, "Do you want to buy the property shown below?");
 
@@ -70,15 +70,14 @@ public class PropertyAskBox extends Widget{
                         return 1;
                     else
                         return 0;
-                case 'P':
-                case 'p':
+                case 8:
                     return -1;
             }
         }
     }
 
     public void OnSelection(int selection){
-        if (selection!=currentSelectionIndex){
+        while (selection!=currentSelectionIndex){
             go();
             try {TimeUnit.MILLISECONDS.sleep(1000);} catch (InterruptedException ignored) {}
         }

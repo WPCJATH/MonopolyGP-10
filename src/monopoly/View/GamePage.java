@@ -16,6 +16,9 @@ public class GamePage extends Widget{
     private final InJailFront inJailFront;
     private StateBar stateBar;
     private Timer timer;
+    private final MessageBar messageBar;
+    private boolean isPaused;
+    private Boolean isContinue;
 
 
     public GamePage(Player[] players, SquareBackend[] squares) {
@@ -75,6 +78,33 @@ public class GamePage extends Widget{
 
         inJailFront = new InJailFront(12, 31);
         addChildComponent(inJailFront);
+
+        messageBar = new MessageBar();
+
+        isPaused = false;
+        isContinue = true;
+    }
+
+    public void setPaused(){
+        isPaused = true;
+        timer.setPaused();
+    }
+
+    public void pauseReleased(){
+        isPaused = false;
+        timer.releasePause();
+    }
+
+    public void setTerminated(){
+        isContinue = false;
+    }
+
+    public boolean waitForPause(){
+        while (isPaused){
+            try {TimeUnit.MILLISECONDS.sleep(200);} catch (InterruptedException ignored) {}
+            if (!isContinue) return true;
+        }
+        return false;
     }
 
     public void setTimer(Timer timer){
@@ -108,7 +138,7 @@ public class GamePage extends Widget{
     private void startWaitListenThread(){
         new Thread(() -> {
             while (true){
-                if (timer.isCountDownTerminated()){
+                if (timer.isCountDownTerminated() || !isContinue){
                     GlobalController.keyboardListener.clearCurrentListenMethods();
                     break;
                 }
@@ -131,7 +161,9 @@ public class GamePage extends Widget{
         SingleDiceBox singleDiceBox= new SingleDiceBox(index+1, players[index].getNameString(), number);
         addChildComponent(singleDiceBox);
         listenOnNoReturnSelection(singleDiceBox, index);
+        if (waitForPause()) return -2;
         singleDiceBox.rollDice();
+        if (waitForPause()) return -2;
         removeChildComponent(singleDiceBox);
         return 1;
     }
@@ -141,7 +173,10 @@ public class GamePage extends Widget{
                 players[index].getNameString(), diceNumbers[0], diceNumbers[1], isMandatory);
         addChildComponent(doubleDiceBox);
         listenOnNoReturnSelection(doubleDiceBox, index);
+        if (waitForPause()) return -2;
         doubleDiceBox.rollDice();
+        if (waitForPause()) return -2;
+        removeChildComponent(doubleDiceBox);
         if (diceNumbers[0]==diceNumbers[1]) return 1;
         return 0;
     }
@@ -153,6 +188,9 @@ public class GamePage extends Widget{
             startWaitListenThread();
             reNum = box.listenOnSelection();
         }
+        else{
+            try {TimeUnit.SECONDS.sleep(3);} catch (InterruptedException ignored) {}
+        }
         timer.stopCountDown();
         return reNum;
     }
@@ -162,9 +200,10 @@ public class GamePage extends Widget{
                 squareBackends[squareIndex], playerIndex + 1, players[playerIndex].getNameString());
         addChildComponent(propertyAskBox);
 
+        if (waitForPause()) return -2;
         int reNum = listenOnReturnSelection(propertyAskBox, playerIndex);
+        if (waitForPause()) return -2;
         if (reNum==-1){
-            try {TimeUnit.SECONDS.sleep(3);} catch (InterruptedException ignored) {}
             if (players[playerIndex].ifBuy(squareBackends[squareIndex])){
                 reNum = 1;
                 propertyAskBox.OnSelection(0);
@@ -174,7 +213,7 @@ public class GamePage extends Widget{
                 propertyAskBox.OnSelection(1);
             }
         }
-
+        if (waitForPause()) return -2;
         removeChildComponent(propertyAskBox);
         return reNum;
     }
@@ -183,14 +222,18 @@ public class GamePage extends Widget{
         LuckyDrawBox luckyDrawBox = new LuckyDrawBox(index+1, players[index].getNameString(), cardNumbers);
         addChildComponent(luckyDrawBox);
 
+        if (waitForPause()) return -2;
         int reNum = listenOnReturnSelection(luckyDrawBox, index);
+        if (waitForPause()) return -2;
         if (reNum==-1){
-            try {TimeUnit.SECONDS.sleep(3);} catch (InterruptedException ignored) {}
             reNum = players[index].chooseCard(0, cardNumbers.length);
             luckyDrawBox.OnSelection(reNum);
         }
+
+        if (waitForPause()) return -2;
         luckyDrawBox.display();
 
+        if (waitForPause()) return -2;
         removeChildComponent(luckyDrawBox);
         return cardNumbers[reNum];
     }
@@ -199,20 +242,33 @@ public class GamePage extends Widget{
         InJailAskBox inJailAskBox = new InJailAskBox(index+1, players[index].getNameString());
         addChildComponent(inJailAskBox);
 
+        if (waitForPause()) return -2;
         int reNum = listenOnReturnSelection(inJailAskBox, index);
+        if (waitForPause()) return -2;
         if (reNum!=-1){
-            try {TimeUnit.SECONDS.sleep(3);} catch (InterruptedException ignored) {}
-            if (players[index].isReleaseOnBail())
+            if (players[index].isReleaseOnBail()){
                 reNum = 1;
-            else
+                inJailAskBox.OnSelection(1);
+            }
+            else{
                 reNum = 0;
+                inJailAskBox.OnSelection(1);
+            }
             inJailAskBox.OnSelection(reNum);
         }
 
+        if (waitForPause()) return -2;
         removeChildComponent(inJailAskBox);
         return reNum;
     }
 
+    public int displayRanListBox(){
+        RankListBox rankListBox = new RankListBox(players);
+        addChildComponent(rankListBox);
+        rankListBox.listenOnSelection();
+        removeChildComponent(rankListBox);
+        return 1;
+    }
 
     public int displayPauseBox(){
         PauseBox pauseBox = new PauseBox();
@@ -278,6 +334,48 @@ public class GamePage extends Widget{
 
     public void clearHost(int positionIndex){
         squareFronts[positionIndex].clearHost();
+    }
+
+    public void roundMessage(int round){
+        addChildComponent(messageBar);
+        messageBar.roundBegins(round);
+        removeChildComponent(messageBar);
+    }
+
+    public void turnsMessage(int id){
+        addChildComponent(messageBar);
+        messageBar.playerTurn(id);
+        removeChildComponent(messageBar);
+    }
+
+    public void dealDoneMessage(){
+        addChildComponent(messageBar);
+        messageBar.dealIsDone();
+        removeChildComponent(messageBar);
+    }
+
+    public void goJailMessage(int id){
+        addChildComponent(messageBar);
+        messageBar.goToJail(id);
+        removeChildComponent(messageBar);
+    }
+
+    public void brokeMessage(int id){
+        addChildComponent(messageBar);
+        messageBar.broke(id);
+        removeChildComponent(messageBar);
+    }
+
+    public void releasedMessage(){
+        addChildComponent(messageBar);
+        messageBar.released();
+        removeChildComponent(messageBar);
+    }
+
+    public void failedMessage(){
+        addChildComponent(messageBar);
+        messageBar.failed();
+        removeChildComponent(messageBar);
     }
 
     private final int[][] squarePositions = {

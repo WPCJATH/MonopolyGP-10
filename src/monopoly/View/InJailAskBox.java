@@ -17,7 +17,7 @@ public class InJailAskBox extends Widget{
         Label headLabel = new Label(63, 1, 1,
                 " ↑ Time Limit               In Jail                            ");
 
-        Label callNameLabel = new Label(25, 1, 2, "To Player " + id + ' ' + name+ ':');
+        Label callNameLabel = new Label(27, 1, 2, "To Player " + id + ' ' + name+ ':');
         Label messageLabel = new Label(63, 1, 3, "Do you want to Rall Dice or Post Bail?");
 
         Widget jail = new Widget(-1, -1, 14, 6);

@@ -8,6 +8,7 @@ public class Timer extends Thread{
     private int timeLeft;
     private boolean isTimerOn;
     private boolean isContinue;
+    private boolean isPaused;
 
     public Timer(){
         timeLeft = 0;
@@ -25,12 +26,20 @@ public class Timer extends Thread{
     }
 
     public boolean isCountDownTerminated(){
-        return isTimerOn;
+        return !isTimerOn;
     }
 
     public void stopCountDown(){
         isTimerOn = false;
         timeLeft = 0;
+    }
+
+    public void setPaused(){
+        isPaused = true;
+    }
+
+    public void releasePause(){
+        isPaused = false;
     }
 
     public void setStop(){
@@ -41,7 +50,7 @@ public class Timer extends Thread{
         while (isContinue){
             long startTime = new Date().getTime();
 
-            if (timeLeft>0 && isTimerOn)
+            if (timeLeft>0 && isTimerOn && !isPaused)
                 timeLeft-=1;
 
             if (timeLeft<=0)

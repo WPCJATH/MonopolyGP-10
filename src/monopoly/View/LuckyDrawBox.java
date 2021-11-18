@@ -16,7 +16,7 @@ public class LuckyDrawBox extends Widget{
         Label headLabel = new Label(63, 1, 1,
                 " ↑ Time Limit         CHANCE Lucky Draw                        ");
 
-        Label callNameLabel = new Label(25, 1, 2, "To Player " + id + ' ' + name+':');
+        Label callNameLabel = new Label(27, 1, 2, "To Player " + id + ' ' + name+':');
         Label messageLabel = new Label(63, 1, 3,
                 "                  Pick one card and flip it.                   ");
 

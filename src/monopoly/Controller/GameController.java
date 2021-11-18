@@ -15,6 +15,7 @@ public class GameController {
     private int whosTurn;
     private final GamePage gamePage;
     private boolean isContinue;
+    private boolean isPaused;
     private int returnNum;
     public Timer timer;
 
@@ -58,7 +59,8 @@ public class GameController {
         }
         catch (InterruptedException ignored) {}
 
-        // if quit displayRankList
+        if (returnNum==2)
+            gamePage.displayRanListBox();
         return returnNum;
     }
 
@@ -68,30 +70,33 @@ public class GameController {
                 onGoingHandler(i);
         }
 
-        try {TimeUnit.SECONDS.sleep(2);} catch (InterruptedException ignored) {}
 
         while (round <= Configs.maxRoundNumber){
+
+            gamePage.roundMessage(round);
             gamePage.setRound(round);
-            for (int i=0; (i<players.length && isContinue);i++){
+
+            for (int i = 0; (i<players.length && !pauseCheck());i++){
                 if (i!=whosTurn) continue;
                 if (players[i].isBankrupt()){
                     whosTurn++;
                     continue;
                 }
 
+                gamePage.turnsMessage(i+1);
                 gamePage.setPlayerBarSelected(i);
 
-                if (players[i].IsInPrison()){
-                    onInJailHandler(i);
-                }
-
-                else{
+                if (onInJailHandler(i)) {
+                    if (pauseCheck()) break;
                     int diceNum = getSingleDiceRandomNumber();
-                    if (!isContinue) break;
+
+                    if (pauseCheck()) break;
                     gamePage.displaySingleDiceBox(i, diceNum);
-                    if (!isContinue) break;
+
+                    if (pauseCheck()) break;
                     int landSquareIndex = makeMovement(i, diceNum);
-                    if (!isContinue) break;
+
+                    if (pauseCheck()) break;
                     switch (squareBackends[landSquareIndex].getType()){
                         case GO                   ->      {}
                         case CHANCE               -> onChanceHandler(i);
@@ -101,8 +106,13 @@ public class GameController {
                         case FREEPARKING          -> onFreeParkingHandler(i);
                         case INJAILORJUSTVISITING -> onVisitJailHandler(i);
                     }
+                    if (pauseCheck()) break;
+
                 }
-                if (!isContinue) break;
+
+                gamePage.setPlayerBarUnselected(i);
+
+                if (pauseCheck()) break;
                 if (players[i].isBankrupt()){
                     gamePage.removePlayer(i);
                     for (int posIndex=0; posIndex< squareBackends.length;posIndex++){
@@ -111,16 +121,17 @@ public class GameController {
                             squareBackends[posIndex].setHostID(-1);
                         }
                     }
+                    gamePage.brokeMessage(i+1);
                 }
-                gamePage.setPlayerBarUnselected(i);
-                whosTurn++;
 
-                try {TimeUnit.SECONDS.sleep(1);} catch (InterruptedException ignored) {}
+                whosTurn++;
             }
-            if (!isContinue) break;
+
+            if (pauseCheck()) break;
             whosTurn=0;
             round++;
         }
+
         gamePage.terminateStateBar();
         if (round>=Configs.maxRoundNumber){
             isContinue = false;
@@ -129,18 +140,30 @@ public class GameController {
         }
     }
 
+    private Boolean pauseCheck(){
+        while (isPaused){
+            try {TimeUnit.MILLISECONDS.sleep(200);} catch (InterruptedException ignored) {}
+            if (!isContinue) return true;
+        }
+        return false;
+    }
 
     private void pauseListener(){
         while(true){
             GlobalController.keyboardListener.listenOnPause();
             if (!isContinue) break;
+            isPaused = true;
+            gamePage.setPaused();
             returnNum = gamePage.displayPauseBox();
             if (returnNum==1 || returnNum==2){
                 isContinue = false;
+                gamePage.setTerminated();
                 GlobalController.keyboardListener.clearAllCurrentListenMethods();
                 break;
             }
             GlobalController.keyboardListener.setUnPause();
+            gamePage.pauseReleased();
+            isPaused = false;
         }
     }
 
@@ -162,36 +185,61 @@ public class GameController {
     }
 
 
-    private void onInJailHandler(int index) {
+    private boolean onInJailHandler(int index) {
+        boolean reValue = true;
+        if (!players[index].IsInPrison()) return reValue;
+
         if (!players[index].onStayingPrison()){
-            if (gamePage.displayInJailAskBox(index)==1){
+            int reNum = gamePage.displayInJailAskBox(index);
+            if (reNum==1){
                 if (players[index].getMoney() < Configs.BailFee){
-                    if (gamePage.displayDoubleDiceBox(index, getDoubleDiceRandomNumber(), true)==1){
+                    reNum = gamePage.displayDoubleDiceBox(index, getDoubleDiceRandomNumber(), true);
+                    if (reNum==1){
                         players[index].setOutPrison();
                         gamePage.setOutOfJail(index);
+                        gamePage.releasedMessage();
                     }
-                    else
+                    else if (reNum==0){
                         players[index].updateInPrison();
+                        gamePage.failedMessage();
+                        reValue = false;
+                    }
+                    else{
+                        return true;
+                    }
                 }
                 else{
                     players[index].setMoney(players[index].getMoney() - Configs.BailFee);
                     players[index].setOutPrison();
                     gamePage.setOutOfJail(index);
+                    gamePage.releasedMessage();
                 }
             }
-            else{
-                if (gamePage.displayDoubleDiceBox(index, getDoubleDiceRandomNumber(), false)==1){
+            else if (reNum==0){
+                reNum = gamePage.displayDoubleDiceBox(index, getDoubleDiceRandomNumber(), false);
+                if (reNum==1){
                     players[index].setOutPrison();
                     gamePage.setOutOfJail(index);
+                    gamePage.releasedMessage();
+                }
+                else if (reNum==0){
+                    gamePage.failedMessage();
+                    players[index].updateInPrison();
+                    reValue = false;
                 }
                 else
-                    players[index].updateInPrison();
+                    return true;
+            }
+            else{
+                return true;
             }
         }
         else{
             gamePage.setOutOfJail(index);
+            gamePage.releasedMessage();
         }
         gamePage.upDatePlayerBar(index);
+        return reValue;
     }
 
     private void onIncomeTaxHandler(int index){
@@ -202,6 +250,7 @@ public class GameController {
     private void onChanceHandler(int index) {
         players[index].onGoingChance();
         int reNum = gamePage.displayLuckyDrawBox(index, squareBackends[players[index].getPositionID()-1].luckyDraw());
+        if (reNum==-2) return;
         players[index].setMoney(reNum + players[index].getMoney());
         gamePage.upDatePlayerBar(index);
     }
@@ -212,6 +261,7 @@ public class GameController {
             int reNum = gamePage.displayPropertyAskBox(index, players[index].getPositionID()-1);
             if (reNum==1){
                 players[index].onBuyingProperty(currentSquare);
+                gamePage.dealDoneMessage();
                 gamePage.upDatePlayerBar(index);
                 gamePage.setHost(currentSquare.getPositionID()-1, index);
             }
@@ -227,10 +277,13 @@ public class GameController {
     }
 
     private void onGoJailHandler(int index) {
-        gamePage.goToJailMove(index);
-        players[index].setPositionID(6);
-        players[index].onGoingPrison();
-        gamePage.upDatePlayerBar(index);
+        new Thread(() -> {
+            gamePage.goToJailMove(index);
+            players[index].setPositionID(6);
+            players[index].onGoingPrison();
+            gamePage.upDatePlayerBar(index);
+        }).start();
+        gamePage.goJailMessage(index + 1);
     }
 
     private void onVisitJailHandler(int index) {
