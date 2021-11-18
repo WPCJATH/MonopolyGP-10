@@ -108,7 +108,7 @@ public class DBAccessor {
     /**
      * Use BufferedReader class to read all necessary data of the game from the file at DB_FILE_PATH, and load to
      * current game.
-     *
+     * @Return Return a completed GameController; return null if any exception happens during LoadGame.
      */
     public static GameController LoadGame() {
         BufferedReader reader = null;
