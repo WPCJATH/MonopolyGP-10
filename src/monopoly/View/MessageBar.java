@@ -1,6 +1,7 @@
 package monopoly.View;
 
 import monopoly.Controller.GlobalController;
+import monopoly.Model.Configs;
 
 import java.util.concurrent.TimeUnit;
 
@@ -68,6 +69,6 @@ public class MessageBar extends Widget{
     }
 
     private static void sleep(){
-        try {TimeUnit.SECONDS.sleep(2);} catch (InterruptedException ignored) {}
+        try {TimeUnit.SECONDS.sleep(Configs.messageOccupyTime);} catch (InterruptedException ignored) {}
     }
 }
