@@ -6,6 +6,7 @@ import monopoly.View.PreLoadModels;
 import monopoly.View.Window;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +48,7 @@ public class DBAccessor {
         // write data into file
         try {
             // default buffer size: {private static int defaultCharBufferSize = 8192;}
-            out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, false), "UTF-8"));
+            out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, false), StandardCharsets.UTF_8));
 
             // game round
             out.write(Integer.toString(this.gameController.round));
@@ -81,14 +82,22 @@ public class DBAccessor {
                 out.newLine();
 
                 // write player inPrisonState
-//                writer.write(player.inPrisonState); // InPrisonState Enum
+                out.write(player.inPrisonState.name()); // InPrisonState Enum
 
                 // write player position ID
                 out.write(Integer.toString(player.getPositionID()));
                 out.newLine();
 
                 // write player property IDs
-//                writer.write(player.getPropertyIds()); // ArrayList
+                ArrayList<Integer> propertyIds = (ArrayList<Integer>) player.getPropertyIds().clone();
+                int num_of_propertyID = propertyIds.size();
+                out.write(num_of_propertyID); // write number of property IDs
+                out.newLine();
+                for (int j = 0; j < num_of_propertyID; ++j) {
+                    // write IDs
+                    out.write(Integer.toString(propertyIds.get(j)));
+                    out.newLine();
+                }
 
                 // write Robot Level
                 out.write(Integer.toString(player.getRobotLevel()));
@@ -124,7 +133,7 @@ public class DBAccessor {
         List<Player> players = new ArrayList<>();
         try {
             FileInputStream fileInputStream = new FileInputStream(DB_FILE_PATH);
-            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, "UTF-8");
+            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, StandardCharsets.UTF_8);
             reader = new BufferedReader(inputStreamReader);
 
             // [game round], [game which-player's-ture], [number of players]
@@ -143,16 +152,23 @@ public class DBAccessor {
                 boolean isBankrupt = Boolean.parseBoolean(reader.readLine());
                 String inPrisonState = reader.readLine();
                 int positionID = Integer.parseInt(reader.readLine());
-                /* read property IDs */
-                int robot_leval = Integer.parseInt(reader.readLine());
+
+                // read property IDs
+                int num_of_propertyIds = Integer.parseInt(reader.readLine());
+                ArrayList<Integer> propertyIds = new ArrayList<>();
+                for (int j=0;j<num_of_propertyIds;++j) {
+                    propertyIds.add(Integer.parseInt(reader.readLine()));
+                }
+
+                int robot_level = Integer.parseInt(reader.readLine());
                 boolean isRobot = Boolean.parseBoolean(reader.readLine());
 
                 Player player = new Player(money, playerID, name, positionID, isBankrupt, inPrisonState);
                 if (isRobot) {
                     player.setRobot();
-                    player.setRobotLevel(robot_leval);
+                    player.setRobotLevel(robot_level);
                 }
-                /* set player PropertyIDs */
+                player.setPropertyIds(propertyIds);
                 players.add(player);
             }
 
