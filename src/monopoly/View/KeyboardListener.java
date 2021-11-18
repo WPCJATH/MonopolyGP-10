@@ -8,16 +8,19 @@ public class KeyboardListener extends Thread{
     private char[] currentInputSequence;
     private final Console console;
     private boolean pureEnterCaptured;
-    private boolean isListenToPause;
-    private boolean pauseCaptured;
+    private boolean isPaused;
+    private boolean isClearCurrentListenMethods;
+    private boolean isClearAllCurrentListenMethods;
 
     public KeyboardListener(){
         super();
         isContinue = true;
         console = System.console();
         pureEnterCaptured = false;
-        isListenToPause = false;
-        pauseCaptured = false;
+        isPaused = false;
+
+        isClearAllCurrentListenMethods = false;
+        isClearCurrentListenMethods = false;
     }
 
     public void setStop(){
@@ -26,21 +29,19 @@ public class KeyboardListener extends Thread{
 
     //listen whether p is pressed
     public void listenToPause(){
-        isListenToPause = true;
         clear();
         while (true){
-            if (currentInputSequence==null  || currentInputSequence.length==0) continue;
-            char charCaptured = currentInputSequence[currentInputSequence.length-1];
-            if (charCaptured==127) break;
-            if (charCaptured=='p' || charCaptured=='P') break;
             try {TimeUnit.MILLISECONDS.sleep(200);} catch (InterruptedException ignored) {}
+            if (isClearAllCurrentListenMethods){return;}
+            if (currentInputSequence==null  || currentInputSequence.length==0){continue;}
+            char charCaptured = currentInputSequence[currentInputSequence.length-1];
+            if (charCaptured=='p' || charCaptured=='P'){break;}
         }
-        isListenToPause = false;
-        pauseCaptured =true;
+        isPaused =true;
     }
 
     public void setUnPause(){
-        pauseCaptured = false;
+        isPaused = false;
     }
 
     //the pause page only
@@ -48,6 +49,7 @@ public class KeyboardListener extends Thread{
         clear();
         while ((currentInputSequence==null || currentInputSequence.length==0) && !pureEnterCaptured){
             try {TimeUnit.MILLISECONDS.sleep(200);} catch (InterruptedException ignored) {}
+            if (isClearAllCurrentListenMethods) return 127;
         }
         if (pureEnterCaptured){
             pureEnterCaptured = false;
@@ -59,11 +61,12 @@ public class KeyboardListener extends Thread{
 
     //regular input listener
     public char listenCharInput(){
-        try {TimeUnit.MILLISECONDS.sleep(300);} catch (InterruptedException ignored) {}
         clear();
         char charCaptured;
         while (true){
-            if (pauseCaptured) continue;
+            try {TimeUnit.MILLISECONDS.sleep(200);} catch (InterruptedException ignored) {}
+            if (isClearAllCurrentListenMethods || isClearCurrentListenMethods) return 127;
+            if (isPaused) continue;
             if (currentInputSequence==null || currentInputSequence.length==0){
                 if (pureEnterCaptured){
                     pureEnterCaptured = false;
@@ -77,20 +80,21 @@ public class KeyboardListener extends Thread{
                 }
                 return charCaptured;
             }
-            try {TimeUnit.MILLISECONDS.sleep(200);} catch (InterruptedException ignored) {}
         }
     }
 
 
     public void clearCurrentListenMethods(){
-        clear();
-        currentInputSequence = new char[]{8};
+        isClearCurrentListenMethods = true;
+        try {TimeUnit.MILLISECONDS.sleep(600);} catch (InterruptedException ignored) {}
+        isClearCurrentListenMethods = false;
     }
 
 
     public void clearAllCurrentListenMethods(){
-        clear();
-        currentInputSequence = new char[]{127};
+        isClearAllCurrentListenMethods = true;
+        try {TimeUnit.MILLISECONDS.sleep(600);} catch (InterruptedException ignored) {}
+        isClearAllCurrentListenMethods = false;
     }
 
     private void clear(){
@@ -109,20 +113,37 @@ public class KeyboardListener extends Thread{
     }
 
     public static void main(String[] args) {
-        KeyboardListener keyboardListener = new KeyboardListener();
-        keyboardListener.start();
+        KeyboardListener kbl = new KeyboardListener();
+        kbl.start();
 
-        try {
-            TimeUnit.SECONDS.sleep(30);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        keyboardListener.setStop();
-        try {
-            keyboardListener.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        Thread A = new Thread(){
+            @Override
+            public void run(){
+                while (true){
+                    char c = kbl.listenCharInput();
+                    System.out.println((int)c + String.valueOf(c));
+                    if (c==127 || c==8)
+                        break;
+                }
+            }
+        };
 
+        Thread B = new Thread(){
+            @Override
+            public void run(){
+                kbl.listenToPause();
+                System.out.println("P entered");
+            }
+        };
+
+        A.start();
+        B.start();
+        try {
+            B.join();
+            kbl.clearCurrentListenMethods();
+            A.join();
+            kbl.setStop();
+            kbl.join();
+        } catch (InterruptedException ignored) {}
     }
 }

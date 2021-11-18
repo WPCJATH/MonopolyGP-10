@@ -97,6 +97,9 @@ public class GamePage extends Widget{
 
     public void setTerminated(){
         isContinue = false;
+        terminateStateBar();
+        for (PlayerBar playerBar: playerBars)
+            playerBar.setUnselected();
     }
 
     public boolean waitForPause(){

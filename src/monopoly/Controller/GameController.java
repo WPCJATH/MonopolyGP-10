@@ -52,10 +52,10 @@ public class GameController {
         gameLoopThread.start();
 
         try {
-            gameLoopThread.join();
-            pauseListenThread.join();
+            gameLoopThread.join(2000);
+            pauseListenThread.join(2000);
             timer.setStop();
-            timer.join();
+            timer.join(1000);
         }
         catch (InterruptedException ignored) {}
 
@@ -132,10 +132,11 @@ public class GameController {
             round++;
         }
 
-        gamePage.terminateStateBar();
+        gamePage.setTerminated();
         if (round>=Configs.maxRoundNumber){
             isContinue = false;
             returnNum = 2;
+            gamePage.setTerminated();
             GlobalController.keyboardListener.clearAllCurrentListenMethods();
         }
     }
@@ -151,6 +152,7 @@ public class GameController {
     private void pauseListener(){
         while(true){
             GlobalController.keyboardListener.listenToPause();
+            System.out.println("Pause Detected.");
             if (!isContinue) break;
             isPaused = true;
             gamePage.setPaused();
@@ -158,7 +160,6 @@ public class GameController {
             if (returnNum==1 || returnNum==2){
                 isContinue = false;
                 gamePage.setTerminated();
-                GlobalController.keyboardListener.setUnPause();
                 GlobalController.keyboardListener.clearAllCurrentListenMethods();
                 break;
             }
