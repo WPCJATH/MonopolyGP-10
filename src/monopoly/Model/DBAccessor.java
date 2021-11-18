@@ -74,7 +74,7 @@ public class DBAccessor {
                 ArrayList<Integer> propertyIds = (ArrayList<Integer>) player.getPropertyIds().clone();
                 out.write(Integer.toString(propertyIds.size())); // write number of property IDs
                 out.newLine();
-                for (int id :propertyIds) {
+                for (int id : propertyIds) {
                     // write IDs
                     out.write(Integer.toString(id));
                     out.newLine();
@@ -108,9 +108,11 @@ public class DBAccessor {
     /**
      * Use BufferedReader class to read all necessary data of the game from the file at DB_FILE_PATH, and load to
      * current game.
+     *
      */
     public static GameController LoadGame() {
         BufferedReader reader = null;
+        GameController gameController = null;
         try {
             FileInputStream fileInputStream = new FileInputStream(DB_FILE_PATH);
             InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, StandardCharsets.UTF_8);
@@ -157,14 +159,13 @@ public class DBAccessor {
             Player[] player_list = new Player[players.size()];
             for (int j = 0; j < players.size(); ++j)
                 player_list[j] = players.get(j);
-            GameController gameController = new GameController(player_list);
+            gameController = new GameController(player_list);
             GameController.round = round;
             GameController.whosTurn = whosTurn;
 
             reader.close();
-            return gameController;
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            gameController = null;
         } finally {
             if (reader != null) {
                 try {
@@ -174,6 +175,6 @@ public class DBAccessor {
                 }
             }
         }
-        return null;
+        return gameController;
     }
 }
