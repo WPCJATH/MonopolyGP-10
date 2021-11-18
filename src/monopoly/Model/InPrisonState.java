@@ -23,6 +23,11 @@ public enum InPrisonState {
     public static boolean isOutNextRound(InPrisonState state) {return state==INJAILROUND3;}
 
     public static InPrisonState parseState(String state){
-        return FREE;
+        for (InPrisonState s : InPrisonState.values()) {
+            if (s.name().equals(state)) {
+                return s;
+            }
+        }
+        return null;
     }
 }
