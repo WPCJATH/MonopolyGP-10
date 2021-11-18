@@ -1,6 +1,7 @@
 package monopoly.Controller;
 
 import monopoly.Model.Configs;
+import monopoly.Model.DBAccessor;
 import monopoly.Model.Player;
 import monopoly.Model.StaticToolMethods;
 import monopoly.View.KeyboardListener;
@@ -63,9 +64,11 @@ public class GlobalController {
     }
 
     private static void OnGameLoad() {
+        GlobalController.gameController = DBAccessor.LoadGame();
     }
 
     private static void OnGameSave() {
+        DBAccessor.SaveGame();
     }
 
     private static void OnUserManual(){
