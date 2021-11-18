@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DBAccessor {
-    static final String DB_FILE_PATH = "db_data.json";
+    static final String DB_FILE_PATH = ".db_data.json";
     GameController gameController;
 
     public DBAccessor(GameController gameController) {
@@ -83,6 +83,7 @@ public class DBAccessor {
 
                 // write player inPrisonState
                 out.write(player.inPrisonState.name()); // InPrisonState Enum
+                out.newLine();
 
                 // write player position ID
                 out.write(Integer.toString(player.getPositionID()));
@@ -91,7 +92,7 @@ public class DBAccessor {
                 // write player property IDs
                 ArrayList<Integer> propertyIds = (ArrayList<Integer>) player.getPropertyIds().clone();
                 int num_of_propertyID = propertyIds.size();
-                out.write(num_of_propertyID); // write number of property IDs
+                out.write(Integer.toString(num_of_propertyID)); // write number of property IDs
                 out.newLine();
                 for (int j = 0; j < num_of_propertyID; ++j) {
                     // write IDs
@@ -130,12 +131,12 @@ public class DBAccessor {
      */
     public GameController loadAllData() {
         BufferedReader reader = null;
-        List<Player> players = new ArrayList<>();
         try {
             FileInputStream fileInputStream = new FileInputStream(DB_FILE_PATH);
             InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, StandardCharsets.UTF_8);
             reader = new BufferedReader(inputStreamReader);
 
+            List<Player> players = new ArrayList<>();
             // [game round], [game which-player's-ture], [number of players]
             int round = Integer.parseInt(reader.readLine());
             int whosTurn = Integer.parseInt(reader.readLine());
@@ -156,7 +157,7 @@ public class DBAccessor {
                 // read property IDs
                 int num_of_propertyIds = Integer.parseInt(reader.readLine());
                 ArrayList<Integer> propertyIds = new ArrayList<>();
-                for (int j=0;j<num_of_propertyIds;++j) {
+                for (int j = 0; j < num_of_propertyIds; ++j) {
                     propertyIds.add(Integer.parseInt(reader.readLine()));
                 }
 
@@ -173,7 +174,10 @@ public class DBAccessor {
             }
 
             // construct a new gameController using the data above
-            GameController gameController = new GameController((Player[]) players.toArray());
+            Player[] player_list = new Player[players.size()];
+            for (int j = 0; j < players.size(); ++j)
+                player_list[j] = players.get(j);
+            GameController gameController = new GameController(player_list);
             gameController.round = round;
             gameController.whosTurn = whosTurn;
 
@@ -205,6 +209,7 @@ public class DBAccessor {
                 new Player(9999, 2, "p2")
         }));
         System.out.println("dbAccessor created successfully.");
+
         dbAccessor.saveAllData();
         GameController gameController = dbAccessor.loadAllData();
     }
