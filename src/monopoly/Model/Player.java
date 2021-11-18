@@ -172,6 +172,8 @@ public class Player {
         return propertyIds.size();
     }
 
+    public void setPropertyIds(ArrayList<Integer> propertyIds){}
+
     public void setRobot() {isRobot = true;}
 
     public boolean isRobot() {
