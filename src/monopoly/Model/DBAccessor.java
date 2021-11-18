@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DBAccessor {
-    public static final String DB_FILE_PATH = "gameBackup/data.bat";
+    public static final String DB_FILE_PATH = "gameBackup/data.json";
 
     /**
      * Use BufferedWriter class to store all necessary data of current game to the file at DB_FILE_PATH.
