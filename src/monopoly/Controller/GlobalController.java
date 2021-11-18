@@ -64,7 +64,16 @@ public class GlobalController {
     }
 
     private static void OnGameLoad() {
-        GlobalController.gameController = DBAccessor.LoadGame();
+        config = new Configs();
+        if  (OnSetting()==0) return;
+        gameController = DBAccessor.LoadGame();
+        window.goToGamePage(GameController.players, config.getSquareBackends());
+
+        if (gameController.gameStart()==1){
+            OnGameSave();
+        }
+        keyboardListener.setUnPause();
+        window.goToMenuPage();
     }
 
     private static void OnGameSave() {
