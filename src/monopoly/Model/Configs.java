@@ -57,6 +57,23 @@ public class Configs {
         loadSquares();
     }
 
+    public  SquareBackend[] getSquareBackends() {
+        return squareBackends;
+    }
+
+    public Configs(int diceSides, int minChanceMoney, int maxChanceMoney,
+                   int bailFee, int initialFunding, int taxRate, SquareBackend[] squareBackends)
+    {
+        Configs.DiceSideNumber = diceSides;
+        Configs.minimumChanceMoney  = minChanceMoney;
+        Configs.maximumChanceMoney = maxChanceMoney;
+        Configs.BailFee = bailFee;
+        Configs.initialFunding = initialFunding;
+        Configs.taxRate = taxRate;
+        Configs.squareBackends = squareBackends;
+    }
+
+
     private void loadSquares(){
         int i = 0;
         squareBackends[i++] = new GoSquare(1);
