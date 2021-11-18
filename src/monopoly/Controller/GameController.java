@@ -11,8 +11,8 @@ public class GameController {
     private final Dice dice;
     public final SquareBackend[] squareBackends;
     public static Player[] players;
-    public int round;
-    public int whosTurn;
+    public static int round;
+    public static int whosTurn;
     private final GamePage gamePage;
     private boolean isContinue;
     private boolean isPaused;
