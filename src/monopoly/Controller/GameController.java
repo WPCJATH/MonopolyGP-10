@@ -70,11 +70,10 @@ public class GameController {
                 onGoingHandler(i);
         }
 
-
         while (round <= Configs.maxRoundNumber){
 
-            gamePage.roundMessage(round);
             gamePage.setRound(round);
+            gamePage.roundMessage(round);
 
             for (int i = 0; (i<players.length && !pauseCheck());i++){
                 if (i!=whosTurn) continue;
@@ -189,7 +188,7 @@ public class GameController {
 
     private boolean onInJailHandler(int index) {
         boolean reValue = true;
-        if (!players[index].IsInPrison()) return reValue;
+        if (!players[index].IsInPrison()) return true;
 
         if (!players[index].onStayingPrison()){
             int reNum = gamePage.displayInJailAskBox(index);
