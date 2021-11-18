@@ -19,7 +19,7 @@ public class Configs {
 
     public static final double fps = 10;
     public static final String displayMode = "refresh"; // "append"
-    public static final int diceAnimationDisplayTime = 2; //seconds
+    public static final int diceAnimationDisplayTime = 1; //seconds
 
     public static final int[] robotMinimumToleranceMoney = {0, 100, 300};
 

@@ -249,17 +249,18 @@ public class GamePage extends Widget{
         if (waitForPause()) return -2;
         int reNum = listenOnReturnSelection(inJailAskBox, index);
         if (waitForPause()) return -2;
-        if (reNum!=-1){
-            if (players[index].isReleaseOnBail())
+        if (reNum==-1){
+            if (players[index].isReleaseOnBail()){
                 reNum = 1;
-            else
+            }
+            else{
                 reNum = 0;
+            }
             inJailAskBox.OnSelection(reNum);
         }
 
         if (waitForPause()) return -2;
         removeChildComponent(inJailAskBox);
-        System.out.println(reNum);
         return reNum;
     }
 

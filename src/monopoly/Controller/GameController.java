@@ -86,7 +86,7 @@ public class GameController {
                 gamePage.turnsMessage(i+1);
                 gamePage.setPlayerBarSelected(i);
 
-                if (onInJailHandler(i)) {
+                if (onInJailHandler(i) && !players[i].isBankrupt()) {
                     if (pauseCheck()) break;
                     int diceNum = getSingleDiceRandomNumber();
 
@@ -208,7 +208,6 @@ public class GameController {
                             reValue = false;
                     }
                     else{
-                        System.out.println(7);
                         return false;
                     }
                 }
@@ -233,12 +232,10 @@ public class GameController {
                             reValue = false;
                         }
                     else{
-                        System.out.println(8);
                         return false;
                     }
             }
             else{
-                System.out.println(9);
                 return false;
             }
         }

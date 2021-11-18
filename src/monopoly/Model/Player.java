@@ -22,7 +22,7 @@ public class Player {
         this.moneyAmount = moneyAmount;
         this.playerID = playerID;
         this.nameString = nameString;
-        positionID = 13;
+        positionID = 1;
         isBankrupt = false;
         inPrisonState = InPrisonState.FREE;
         randomNo = new Random();
