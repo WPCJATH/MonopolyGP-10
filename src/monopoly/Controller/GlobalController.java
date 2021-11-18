@@ -65,7 +65,6 @@ public class GlobalController {
 
     private static void OnGameLoad() {
         config = new Configs();
-        if  (OnSetting()==0) return;
         gameController = DBAccessor.LoadGame();
         window.goToGamePage(GameController.players, config.getSquareBackends());
 
