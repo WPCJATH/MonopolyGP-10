@@ -8,6 +8,9 @@ import monopoly.View.KeyboardListener;
 import monopoly.View.PreLoadModels;
 import monopoly.View.Window;
 
+/**
+ *
+ */
 public class GlobalController {
     public static PreLoadModels preLoadModels;
     public static GameController gameController;
@@ -66,9 +69,9 @@ public class GlobalController {
     private static void OnGameLoad() {
         config = new Configs();
         gameController = DBAccessor.LoadGame();
-        if (gameController==null)
+        if (gameController==null) {
             OnGameStart();
-
+        }
         else{
             window.goToGamePage(GameController.players, config.getSquareBackends());
 

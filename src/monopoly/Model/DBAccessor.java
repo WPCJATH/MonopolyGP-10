@@ -20,9 +20,7 @@ public class DBAccessor {
         if (!file.exists()) {
             try {
                 file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            } catch (IOException ignored) {}
         }
 
         // write data into file
@@ -89,16 +87,13 @@ public class DBAccessor {
 
             }
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ignored) {
         } finally {
             try {
                 if (out != null) {
                     out.close();
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            } catch (Exception ignored) {}
         }
         // debug info
         System.out.println("Data stored successfully!");
