@@ -74,6 +74,7 @@ public class GlobalController {
         }
         else{
             window.goToGamePage(GameController.players, config.getSquareBackends());
+            gameController.setGamePage(window.gamePage);
 
             if (gameController.gameStart()==1){
                 OnGameSave();

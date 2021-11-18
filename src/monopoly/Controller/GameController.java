@@ -13,7 +13,7 @@ public class GameController {
     public static Player[] players;
     public static int round;
     public static int whosTurn;
-    private final GamePage gamePage;
+    private  GamePage gamePage;
     private boolean isContinue;
     private boolean isPaused;
     private int returnNum;
@@ -23,12 +23,16 @@ public class GameController {
         dice = new Dice();
         squareBackends = GlobalController.config.getSquareBackends();
         GameController.players = players;
-        GameController.round = 1;
+        GameController.round = 0;
         GameController.whosTurn = 0;
         gamePage = GlobalController.window.gamePage;
 
         isContinue = true;
         isPaused = false;
+    }
+
+    public void setGamePage(GamePage gamePage){
+        this.gamePage = gamePage;
     }
 
     private int getSingleDiceRandomNumber(){
@@ -64,10 +68,11 @@ public class GameController {
         return returnNum;
     }
 
-    public void gameLoop() {
-        if (round==1){
+    public  void gameLoop() {
+        if (round==0){
             for (int i=0; i<players.length;i++)
                 onGoingHandler(i);
+            round++;
         }
 
         while (round <= Configs.maxRoundNumber){
