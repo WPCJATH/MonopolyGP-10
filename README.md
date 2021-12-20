@@ -35,7 +35,7 @@ During the game, user can press “P” then “ENTER” to pause the game.
 - **Pause Page:** User should press “W” or “S” to change his/her choice.
 - **End Page:** User should press “W” or “S” to change his/her choice.
 
-- **Details in the user [manual document](User Manual.pdf)**.
+- **Details in the user [manual document](User-Manual.pdf)**.
 
 ## Developer Manual
 ### Test Environment
