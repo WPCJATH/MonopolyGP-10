@@ -24,6 +24,7 @@ shown in the video below.
 
 ## Demo Video
 [![Watch the video](images/gameboard.png)](https://www.youtube-nocookie.com/embed/D5y0iqo7b1o)
+If you cannot access the demo video via YouTube, you can download it [here](images/Group10%20Video.mp4).
 
 ## User Manual
 - **User operation:** After each operation is done, you should press “ENTER” to let the operation work. All the operations below are based on this. 
