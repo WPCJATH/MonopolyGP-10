@@ -1,6 +1,6 @@
 # GP-10 Monopoly
 ## Introduction
-The implementation of group project in course COMP3211 Software Engineering (21/22 sem 1) of The Hong Kong Polytechnic 
+The implementation of a group project in course COMP3211 Software Engineering (21/22 sem 1) of The Hong Kong Polytechnic 
 University from group 10.
 
 This is a Command-Line based simple Monopoly game running on OS X or Linux terminal. The game uses a custom GUI-like 
