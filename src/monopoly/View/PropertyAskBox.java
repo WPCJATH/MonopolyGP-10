@@ -56,6 +56,7 @@ public class PropertyAskBox extends Widget{
         currentSelectionIndex=0;
     }
 
+    @Override
     public int listenOnSelection(){
         while(true){
             switch (GlobalController.keyboardListener.listenCharInput()){

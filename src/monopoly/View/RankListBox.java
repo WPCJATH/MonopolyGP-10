@@ -34,6 +34,7 @@ public class RankListBox extends Widget{
         addChildComponent(goToMenu);
     }
 
+    @Override
     public int listenOnSelection(){
         GlobalController.keyboardListener.listenCharInputOnPause();
         return 0;

@@ -9,6 +9,7 @@ public class UserManual extends Widget{
         setContent(GlobalController.preLoadModels.userManual);
     }
 
+    @Override
     public int listenOnSelection(){
         while (true){
             if (GlobalController.keyboardListener.listenCharInput()==10)

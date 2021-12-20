@@ -43,6 +43,7 @@ public class InJailAskBox extends Widget{
     }
 
 
+    @Override
     public int listenOnSelection(){
         while(true){
             switch (GlobalController.keyboardListener.listenCharInput()){

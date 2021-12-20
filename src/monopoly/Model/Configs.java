@@ -10,16 +10,16 @@ public class Configs {
     public static final int maximumPlayerNumber = 6;
     // The minimum human player in the game. Do not change.
     public static final int minimumHumanPlayerNumber = 1;
-    // The maximum length of name apearing in game. Do not change.
+    // The maximum length of name appearing in game. Do not change.
     public static final int nameLengthBound = 10;
 
 
-    // The max round of the game, the game will automaticly terminate when reaching this round number.
+    // The max round of the game, the game will automatically terminate when reaching this round number.
     public static final int maxRoundNumber = 100;
     // The time in seconds waiting for player's selection. If time is up, the game will help the user make operation
     // immediately.
     public static final int waitForSelectionTime = 30;
-    // The time in seconds pengding the robot players' operations to aviod too fast to be seen.
+    // The time in seconds pending the robot players' operations to avoid too fast to be seen.
     public static final int robotPendingTime = 3;
     // The time in seconds of dice animation playing.
     public static final int diceAnimationDisplayTime = 2;
@@ -35,13 +35,13 @@ public class Configs {
     public static int maximumChanceMoney = 200;
     // The fine when getting out of jail by paying.
     public static int BailFee = 150;
-    // The initial money of players, will be shown on Go sqaure.
+    // The initial money of players, will be shown on Go square.
     public static int initialFunding = 1500;
     // The tax rate of income tax
     public static int taxRate = 10;
 
     // 0 for level low robot, 100 for level mid robot, 300 for level high robot.
-    // The robot on makes pay when aftering paying, their money left still more than the minimum tolerance money
+    // The robot on makes pay when after paying, their money left still more than the minimum tolerance money
     public static final int[] robotMinimumToleranceMoney = {0, 100, 300};
 
     // Arrays for square backend in Model module

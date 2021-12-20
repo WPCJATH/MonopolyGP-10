@@ -179,29 +179,39 @@ public class GameController {
         }
 
         gamePage.setTerminated();
+        // The game terminates because arriving the maximum round
         if (round>=Configs.maxRoundNumber){
             isContinue = false;
             returnNum = 2;
-            gamePage.setTerminated();
             GlobalController.keyboardListener.clearAllCurrentListenMethods();
         }
     }
 
+    /**
+     * Check whether the game is paused
+     * */
     private Boolean pauseCheck(){
         while (isPaused){
             try {TimeUnit.MILLISECONDS.sleep(200);} catch (InterruptedException ignored) {}
+            // if the game is asked to quit
             if (!isContinue) return true;
         }
+        // if the game is asked to continue
         return false;
     }
 
+    /**
+     * Listen to the pause signal
+     * */
     private void pauseListener(){
         while(true){
             GlobalController.keyboardListener.listenToPause();
-            // System.out.println("Pause Detected.");
+            // Check is terminated
             if (!isContinue) break;
             isPaused = true;
+            // Tell gamePage the game is paused
             gamePage.setPaused();
+            // Display the pause message box
             returnNum = gamePage.displayPauseBox();
             if (returnNum==1 || returnNum==2){
                 isContinue = false;
@@ -209,14 +219,19 @@ public class GameController {
                 GlobalController.keyboardListener.clearAllCurrentListenMethods();
                 break;
             }
+            // Continue the game
             GlobalController.keyboardListener.setUnPause();
             gamePage.pauseReleased();
             isPaused = false;
         }
     }
 
+    /**
+     * Move the current player
+     * */
     private int makeMovement(int index, int diceNum){
         int positionID = players[index].getPositionID();
+        // Special treatment if the current player moves to a new cycle
         if (positionID + diceNum > 20){
             gamePage.makeMovement(index, 21 - positionID);
             onGoingHandler(index);
@@ -232,18 +247,27 @@ public class GameController {
         }
     }
 
-
+    /**
+     * Handle the in prison player
+     * */
     private boolean onInJailHandler(int index) {
         if (!players[index].IsInPrison()) return true;
+
         boolean reValue = true;
         if (!players[index].onStayingPrison()){
             int reNum1;
             reNum1 = gamePage.displayInJailAskBox(index);
-
+            // reNum1 == 1: the user choose to pay the bail
+            // reNum1 == 2: the user choose to roll the double dice
+            // reNum1 == other: the user is quiting the game
             if (reNum1==1){
+                // If the player's money cannot afford the bail, the player will be asked to roll the double dice
                 if (players[index].getMoney() < Configs.BailFee){
                     int reNum2;
                     reNum2 = gamePage.displayDoubleDiceBox(index, getDoubleDiceRandomNumber(), true);
+                    // reNum2==1: the numbers of the double dice are the same, can be released
+                    // reNum2==0: the numbers are not the same, move to next in jail state
+                    // reNum2==other: the user is quiting the game
                     if (reNum2==1){
                         players[index].setOutPrison();
                         gamePage.setOutOfJail(index);
@@ -258,6 +282,7 @@ public class GameController {
                         return false;
                     }
                 }
+                // Deduct money and release the player
                 else{
                     players[index].setMoney(players[index].getMoney() - Configs.BailFee);
                     players[index].setOutPrison();
@@ -295,23 +320,34 @@ public class GameController {
         return reValue;
     }
 
+    /**
+     * Triggered when the player arrive at income tax square
+     * */
     private void onIncomeTaxHandler(int index){
         players[index].onGoingIncomeTax();
         gamePage.upDatePlayerBar(index);
     }
 
+    /**
+     * Triggered when the player arrive at chance handler
+     * */
     private void onChanceHandler(int index) {
         players[index].onGoingChance();
         int reNum = gamePage.displayLuckyDrawBox(index, squareBackends[players[index].getPositionID()-1].luckyDraw());
-        if (reNum==-2) return;
+        if (reNum==-2) return; // the user is quiting the game
         players[index].setMoney(reNum + players[index].getMoney());
         gamePage.upDatePlayerBar(index);
     }
 
+    /**
+     * Triggered when the player arrive at a property square
+     * */
     private void onPropertyHandler(int index) {
         SquareBackend currentSquare = squareBackends[players[index].getPositionID()-1];
+        // if the player can afford the current property
         if (!players[index].onGoingProperty(currentSquare)){
             int reNum = gamePage.displayPropertyAskBox(index, players[index].getPositionID()-1);
+            // reNum==1: the player want to buy the property
             if (reNum==1){
                 players[index].onBuyingProperty(currentSquare);
                 gamePage.dealDoneMessage();
@@ -319,7 +355,9 @@ public class GameController {
                 gamePage.setHost(currentSquare.getPositionID()-1, index);
             }
         }
+        // the player cannot afford the current property or the property already has a host
         else{
+            // if the property has a property and the host is not the current player
             if (currentSquare.hasHost() && currentSquare.getHostID()!=index+1){
                 players[currentSquare.getHostID()-1].setMoney(
                         players[currentSquare.getHostID()-1].getMoney() + currentSquare.getRent());
@@ -329,7 +367,11 @@ public class GameController {
         }
     }
 
+    /**
+     * Trigger when the player arrive at the go jail square
+     * */
     private void onGoJailHandler(int index) {
+        // Move the player to jail
         new Thread(() -> {
             gamePage.goToJailMove(index);
             players[index].setPositionID(6);

@@ -39,6 +39,7 @@ public class LuckyDrawBox extends Widget{
         addChildComponent(label1);
     }
 
+    @Override
     public int listenOnSelection(){
         while(true){
             switch (GlobalController.keyboardListener.listenCharInput()){

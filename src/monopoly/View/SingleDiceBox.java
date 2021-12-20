@@ -31,6 +31,7 @@ public class SingleDiceBox extends Widget{
         addChildComponent(rollButton);
     }
 
+    @Override
     public int listenOnSelection(){
         while(true){
             switch (GlobalController.keyboardListener.listenCharInput()){

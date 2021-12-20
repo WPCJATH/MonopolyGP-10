@@ -45,6 +45,7 @@ public class DoubleDiceBox extends Widget{
         }
     }
 
+    @Override
     public int listenOnSelection(){
         while(true){
             switch (GlobalController.keyboardListener.listenCharInput()) {

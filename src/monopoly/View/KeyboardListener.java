@@ -3,6 +3,9 @@ package monopoly.View;
 import java.io.Console;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Class for listening the keyboard input
+ * */
 public class KeyboardListener extends Thread{
     private boolean isContinue;
     private char[] currentInputSequence;
@@ -27,7 +30,7 @@ public class KeyboardListener extends Thread{
         isContinue = false;
     }
 
-    //listen whether p is pressed
+    //Detect the 'p' press
     public void listenToPause(){
         clear();
         while (true){
@@ -44,7 +47,7 @@ public class KeyboardListener extends Thread{
         isPaused = false;
     }
 
-    //the pause page only
+    //Listen to key input when pause page is displaying
     public char listenCharInputOnPause(){
         clear();
         while ((currentInputSequence==null || currentInputSequence.length==0) && !pureEnterCaptured){
@@ -112,6 +115,7 @@ public class KeyboardListener extends Thread{
         }
     }
 
+    // debug test
     public static void main(String[] args) {
         KeyboardListener kbl = new KeyboardListener();
         kbl.start();

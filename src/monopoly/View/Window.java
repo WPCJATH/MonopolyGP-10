@@ -9,13 +9,19 @@ import java.util.ConcurrentModificationException;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * The class display and control the whole window of the game
+ */
 public class Window extends Thread{
+    // fixed width and height
     public static final int width = 116;
     public static final int height = 41;
 
     private long startTime;
+    // per singleFrameDuration a refresh
     private final long singleFrameDuration;
 
+    // the most basic widget in the windows, either mainPage or gamePage
     public Widget centralWidget;
     public MainPage mainPage;
     public GamePage gamePage;
@@ -36,12 +42,18 @@ public class Window extends Thread{
 
     }
 
+    /**
+     * Recursively update all the widgets in the window
+     * */
     public void update() throws ConcurrentModificationException {
         if (!centralWidget.isChanged()) return;
         centralWidget.update();
         printContent(centralWidget.getContent());
     }
 
+    /**
+     * keep refresh during the running of the game software
+     * */
     @Override
     public void run(){
         while(isContinue){
@@ -56,14 +68,17 @@ public class Window extends Thread{
                 TimeUnit.MILLISECONDS.sleep(singleFrameDuration - (new Date().getTime()- startTime));
             } catch (InterruptedException ignored) {}
         }
+        // ANSI code to move the cursor
         if (Configs.displayMode.equals("refresh")){
             System.out.print("\033[2J");
         }
         System.out.println("Push one more enter to terminate.");
     }
 
+    // set stop by controller to terminate
     public void setStop(){isContinue = false;}
 
+    // recursively called function to listen on the user selection
     public int listenOnSelection(){
         if (isOnMainPage)
             return mainPage.listenOnSelection();
@@ -71,6 +86,7 @@ public class Window extends Thread{
             return gamePage.listenOnSelection();
     }
 
+    // Switch to the game page
     public void goToGamePage(Player[] players, SquareBackend[] squareBackends){
         if (!isOnMainPage) return;
         centralWidget.removeChildComponent(mainPage);
@@ -80,6 +96,7 @@ public class Window extends Thread{
         isOnMainPage = false;
     }
 
+    // Switch to the menu page
     public void goToMenuPage(){
         if (isOnMainPage) return;
         centralWidget.removeChildComponent(gamePage);
@@ -88,16 +105,18 @@ public class Window extends Thread{
         isOnMainPage = true;
     }
 
+    // print the content to the screen once called
     public static void printContent(char[][] content){
         for (char[] line: content){
             System.out.println(line);
         }
+        // ANSI code to move the cursor
         if (Configs.displayMode.equals("refresh")){
             System.out.print("\033["+height+"A");
         }
     }
 
-
+    // debug testing
     public static void main(String[] args){
 
         KeyboardListener kbl = new KeyboardListener();

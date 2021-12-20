@@ -9,7 +9,7 @@ import monopoly.View.PreLoadModels;
 import monopoly.View.Window;
 
 /**
- *
+ * The controller for the whole game software including menu, settings, etc.
  */
 public class GlobalController {
     public static PreLoadModels preLoadModels;

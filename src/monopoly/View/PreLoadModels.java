@@ -1,5 +1,8 @@
 package monopoly.View;
 
+/**
+ * Class store the partial interface in String box and load them in to char[][] when game initialized
+ * */
 public class PreLoadModels {
     static class  DiceModel {
         private static final String unknown = """
@@ -363,6 +366,7 @@ public class PreLoadModels {
         return new char[height][width];
     }
 
+    // debug test
     public static void main(String[] args){
 
         PreLoadModels models = new PreLoadModels();
