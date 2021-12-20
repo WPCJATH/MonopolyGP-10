@@ -23,11 +23,8 @@ considered adding some animations to slow down the pace of the game and make it 
 shown in the video below.
 
 ## Demo Video
-
+<video id="video" controls="" preload="auto" poster="images/gameboard.png">
+<source id="mp4" src="https://www.youtube.com/watch?v=D5y0iqo7b1o" type="video/mp4">
+</video>
 
 ## 123
-<iframe
-style="margin-left: 2px; margin-bottom:-5px;"
-frameborder="0" scrolling="0" width="100px" height="20px"
-src="https://ghbtns.com/github-btn.html?user=fandongtongxue&repo=fandongtongxue.github.io&type=star&count=true" >
-</iframe>
