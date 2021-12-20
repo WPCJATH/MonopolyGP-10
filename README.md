@@ -24,8 +24,9 @@ shown in the video below.
 
 ## Demo Video
 <video id="video" controls="" preload="auto" poster="images/gameboard.png">
-<source id="mp4" src=https://www.youtube-nocookie.com/embed/D5y0iqo7b1o" type="video/mp4">
+<source id="mp4" src="https://www.youtube-nocookie.com/embed/D5y0iqo7b1o" type="video/mp4">
 </video>
 
+[![Watch the video](images/gameboard.png)](https://www.youtube-nocookie.com/embed/D5y0iqo7b1o)
 
 ## 123
