@@ -116,25 +116,19 @@ public class KeyboardListener extends Thread{
         KeyboardListener kbl = new KeyboardListener();
         kbl.start();
 
-        Thread A = new Thread(){
-            @Override
-            public void run(){
-                while (true){
-                    char c = kbl.listenCharInput();
-                    System.out.println((int)c + String.valueOf(c));
-                    if (c==127 || c==8)
-                        break;
-                }
+        Thread A = new Thread(() -> {
+            while (true){
+                char c = kbl.listenCharInput();
+                System.out.println((int)c + String.valueOf(c));
+                if (c==127 || c==8)
+                    break;
             }
-        };
+        });
 
-        Thread B = new Thread(){
-            @Override
-            public void run(){
-                kbl.listenToPause();
-                System.out.println("P entered");
-            }
-        };
+        Thread B = new Thread(() -> {
+            kbl.listenToPause();
+            System.out.println("P entered");
+        });
 
         A.start();
         B.start();

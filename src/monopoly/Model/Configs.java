@@ -20,11 +20,11 @@ public class Configs {
     // immediately.
     public static final int waitForSelectionTime = 30;
     // The time in seconds pengding the robot players' operations to aviod too fast to be seen.
-    public static final int robotPendingTime = 5;
+    public static final int robotPendingTime = 3;
     // The time in seconds of dice animation playing.
     public static final int diceAnimationDisplayTime = 2;
     // The time in seconds of the message box (i.e. Round XX, Player X's Turn...) on Screen.(In main thread)
-    public static final int messageOccupyTime = 5;
+    public static final int messageOccupyTime = 3;
 
 
     // The sides of the number shown in game. can be set to (1-6)

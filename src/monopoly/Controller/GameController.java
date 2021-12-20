@@ -7,7 +7,7 @@ import monopoly.View.Timer;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Controller of the whole game.
+ * Controller of the game.
  */
 public class GameController {
     private final Dice dice;
@@ -41,12 +41,15 @@ public class GameController {
     }
 
     /**
-     * @return dice number.
+     * @return single dice number.
      */
     private int getSingleDiceRandomNumber(){
         return dice.rollDice();
     }
 
+    /**
+     * @return double dice number.
+     */
     private int[] getDoubleDiceRandomNumber(){
         int[] diceNumbers = new int[2];
         diceNumbers[0] = dice.rollDice();
@@ -56,6 +59,8 @@ public class GameController {
 
     /**
      * Start the game.
+     * Open the threads of pause listener, timer.
+     * Recycle these threads after gameLoop() ending.
      */
     public int gameStart(){
         Thread pauseListenThread = new Thread(this::pauseListener);
@@ -83,46 +88,60 @@ public class GameController {
      * Game main loop.
      */
     public  void gameLoop() {
+        // round==0 means the start of the game, trigger the onGoingHandler (add money)
         if (round==0){
             for (int i=0; i<players.length;i++)
                 onGoingHandler(i);
             round++;
         }
+        // round!=0 means the game is reloaded, put the players in jail into the jail and set hosts for all properties
         else{
             for (int i=0;i<players.length;i++){
                 if (players[i].IsInPrison()){
                     gamePage.goToJailMove(i);
                 }
                 gamePage.upDatePlayerBar(i);
+
+                for (int id: players[i].getPropertyIds()){
+                    squareBackends[id-1].setHostID(players[i].getPlayerID());
+                }
             }
+
         }
 
+        // The round loop, 1 loop for 1 round
         while (round <= Configs.maxRoundNumber){
 
+            // Set the round number
             gamePage.setRound(round);
+            // Display the round message on interface
             gamePage.roundMessage(round);
 
             if (pauseCheck()) break;
             for (int i = 0; i<players.length;i++){
-                if (i!=whosTurn) continue;
+                if (i!=whosTurn) continue; // If game is reloaded, the game might not continue with player 1
+                // Skip the broken players
                 if (players[i].isBankrupt()){
                     whosTurn++;
                     continue;
                 }
-
+                // Display turn message
                 gamePage.turnsMessage(i+1);
+                // Highlight the player on interface
                 gamePage.setPlayerBarSelected(i);
 
+                // Check and handler the prison state(if any) and check if broken
                 if (onInJailHandler(i) && !players[i].isBankrupt()) {
                     if (pauseCheck()) break;
+                    // Display the single dice interface
                     int diceNum = getSingleDiceRandomNumber();
-
-                    if (pauseCheck()) break;
                     gamePage.displaySingleDiceBox(i, diceNum);
 
+                    // Move the player
                     if (pauseCheck()) break;
                     int landSquareIndex = makeMovement(i, diceNum);
 
+                    // Trigger the corresponding square handler
                     if (pauseCheck()) break;
                     switch (squareBackends[landSquareIndex].getType()){
                         case GO                   ->      {}
@@ -136,18 +155,19 @@ public class GameController {
                     if (pauseCheck()) break;
 
                 }
-
+                // Cancel Highlight
                 gamePage.setPlayerBarUnselected(i);
 
                 if (pauseCheck()) break;
+                // Recycle the properties and remove the player from game board if the player is broken.
                 if (players[i].isBankrupt()){
                     gamePage.removePlayer(i);
-                    for (int posIndex=0; posIndex< squareBackends.length;posIndex++){
-                        if (squareBackends[posIndex].hasHost() && squareBackends[posIndex].getHostID()==i+1){
-                            gamePage.clearHost(posIndex);
-                            squareBackends[posIndex].setHostID(-1);
-                        }
+
+                    for (int id: players[i].getPropertyIds()){
+                        gamePage.clearHost(id-1);
+                        squareBackends[id-1].setHostID(-1);
                     }
+                    // Display the broke message
                     gamePage.brokeMessage(i+1);
                 }
                 whosTurn++;

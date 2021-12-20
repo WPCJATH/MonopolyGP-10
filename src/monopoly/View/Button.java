@@ -2,7 +2,7 @@ package monopoly.View;
 
 import java.util.Arrays;
 
-public class Button extends Widget{
+public class Button extends Widget {
     private final Label label;
     private char[] selectedTop;
     private char[] unselectedTopAndBottom;

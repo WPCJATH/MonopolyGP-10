@@ -13,8 +13,7 @@ public class Window extends Thread{
     public static final int width = 116;
     public static final int height = 41;
 
-    public long deltaTime;
-    private long previousFrameTime;
+    private long startTime;
     private final long singleFrameDuration;
 
     public Widget centralWidget;
@@ -25,8 +24,7 @@ public class Window extends Thread{
     private boolean isContinue;
 
     public Window() {
-        previousFrameTime = 0;
-        deltaTime = 0;
+        startTime = 0;
         centralWidget = new Widget(width, height, 0, 0);
         centralWidget.initialContent();
         singleFrameDuration = (long)(1000*(1/Configs.fps));
@@ -47,8 +45,7 @@ public class Window extends Thread{
     @Override
     public void run(){
         while(isContinue){
-            deltaTime = new Date().getTime() - previousFrameTime;
-            previousFrameTime = new Date().getTime();
+            startTime = new Date().getTime();
 
             try{
                 update();
@@ -56,7 +53,7 @@ public class Window extends Thread{
 
 
             try {
-                TimeUnit.MILLISECONDS.sleep(singleFrameDuration - (new Date().getTime()- previousFrameTime));
+                TimeUnit.MILLISECONDS.sleep(singleFrameDuration - (new Date().getTime()- startTime));
             } catch (InterruptedException ignored) {}
         }
         if (Configs.displayMode.equals("refresh")){
