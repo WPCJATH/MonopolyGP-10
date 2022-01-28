@@ -100,10 +100,11 @@ public class GameController {
                 if (players[i].IsInPrison()){
                     gamePage.goToJailMove(i);
                 }
-                gamePage.upDatePlayerBar(i);
+                gamePage.updatePlayerBar(i);
 
                 for (int id: players[i].getPropertyIds()){
                     squareBackends[id-1].setHostID(players[i].getPlayerID());
+                    gamePage.setHost(id-1, i);
                 }
             }
 
@@ -316,7 +317,7 @@ public class GameController {
             gamePage.releasedMessage();
         }
 
-        gamePage.upDatePlayerBar(index);
+        gamePage.updatePlayerBar(index);
         return reValue;
     }
 
@@ -325,7 +326,7 @@ public class GameController {
      * */
     private void onIncomeTaxHandler(int index){
         players[index].onGoingIncomeTax();
-        gamePage.upDatePlayerBar(index);
+        gamePage.updatePlayerBar(index);
     }
 
     /**
@@ -336,7 +337,7 @@ public class GameController {
         int reNum = gamePage.displayLuckyDrawBox(index, squareBackends[players[index].getPositionID()-1].luckyDraw());
         if (reNum==-2) return; // the user is quiting the game
         players[index].setMoney(reNum + players[index].getMoney());
-        gamePage.upDatePlayerBar(index);
+        gamePage.updatePlayerBar(index);
     }
 
     /**
@@ -351,7 +352,7 @@ public class GameController {
             if (reNum==1){
                 players[index].onBuyingProperty(currentSquare);
                 gamePage.dealDoneMessage();
-                gamePage.upDatePlayerBar(index);
+                gamePage.updatePlayerBar(index);
                 gamePage.setHost(currentSquare.getPositionID()-1, index);
             }
         }
@@ -361,8 +362,8 @@ public class GameController {
             if (currentSquare.hasHost() && currentSquare.getHostID()!=index+1){
                 players[currentSquare.getHostID()-1].setMoney(
                         players[currentSquare.getHostID()-1].getMoney() + currentSquare.getRent());
-                gamePage.upDatePlayerBar(index);
-                gamePage.upDatePlayerBar(currentSquare.getHostID()-1);
+                gamePage.updatePlayerBar(index);
+                gamePage.updatePlayerBar(currentSquare.getHostID()-1);
             }
         }
     }
@@ -376,7 +377,7 @@ public class GameController {
             gamePage.goToJailMove(index);
             players[index].setPositionID(6);
             players[index].onGoingPrison();
-            gamePage.upDatePlayerBar(index);
+            gamePage.updatePlayerBar(index);
         }).start();
         gamePage.goJailMessage(index + 1);
     }
@@ -389,6 +390,6 @@ public class GameController {
     }
     private void onGoingHandler(int index) {
         players[index].onGoingGo();
-        gamePage.upDatePlayerBar(index);
+        gamePage.updatePlayerBar(index);
     }
 }

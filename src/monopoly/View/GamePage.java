@@ -121,7 +121,7 @@ public class GamePage extends Widget{
         playerBars[index].setUnselected();
     }
 
-    public void upDatePlayerBar(int index){
+    public void updatePlayerBar(int index){
         new Thread(() -> {
             playerBars[index].updateMoney();
             playerBars[index].updateState();
